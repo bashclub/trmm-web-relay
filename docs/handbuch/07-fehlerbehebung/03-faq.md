@@ -32,7 +32,10 @@ Ja, auf demselben Host oder einem anderen. Er braucht nur einen eigenen Port. Si
 Der Sprung-Host prüft die Absenderadresse gegen die öffentliche Adresse der Agenten, und TRMM liefert die nur als IPv4. Über IPv6 ließe sich das nicht prüfen.
 
 **Warum ein eigenes Browserprofil?**
-Damit nur dieses Profil durch den Tunnel geht und Zertifikatsfehler ignorieren darf, ohne dass das beim normalen Surfen gilt. Das Profil kommt außerhalb der Tunnel nirgendwohin.
+Damit nur dieses Profil durch den Tunnel geht und keine beliebige Webseite aus dem Internet Anfragen in die Kundennetze schicken kann. Das Profil kommt außerhalb der Tunnel nur zum Web Store und zu den Hosts in `direct_hosts`.
+
+**Kann ich Bitwarden oder einen anderen Passwortmanager nutzen?**
+Ja, als Erweiterung im Profil, mit dem Server in `direct_hosts`. Siehe [Erweiterungen und Passwortmanager](../04-bedienung/05-erweiterungen.md).
 
 **Warum Brave, Chromium, Chrome oder Edge und nicht Firefox?**
 Der Client startet das Profil mit Chromium-Schaltern für Profilordner, Proxy und Zertifikate. Firefox hat dafür keine gleichwertigen Schalter.

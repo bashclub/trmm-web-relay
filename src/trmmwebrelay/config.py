@@ -61,6 +61,13 @@ class Config:
     max_hours: int = 4
     # Leer: Brave bzw. Chromium automatisch suchen
     browser: str = ""
+    # Hosts, die das Browserprofil direkt (ohne Tunnel) erreicht, z. B. ein
+    # Passwortmanager; "host" gilt mit Subdomains, nur Port 443 außer mit ":port"
+    direct_hosts: list[str] = field(default_factory=list)
+    # Web Store und Updates für Browser-Erweiterungen direkt erreichbar
+    extension_store: bool = True
+    # Alte Arbeitsweise: Zertifikatsfehler im Profil ignorieren (auch bei direct_hosts)
+    ignore_cert_errors: bool = False
     # Server, dessen Sites die Steuerseite zeigt (immer nur einer)
     active_server: str = ""
     servers: list[Server] = field(default_factory=list)
@@ -115,6 +122,13 @@ def load() -> Config:
     data = tomllib.loads(CONFIG_PATH.read_text())
     servers = data.pop("server", [])
     _apply(cfg, data, "", skip=("servers",))
+    if isinstance(cfg.direct_hosts, str):
+        cfg.direct_hosts = cfg.direct_hosts.replace(",", " ").split()
+    if not isinstance(cfg.direct_hosts, list) or not all(isinstance(h, str) for h in cfg.direct_hosts):
+        raise ValueError(f"direct_hosts in {CONFIG_PATH}: Liste von Hostnamen erwartet")
+    for flag in ("extension_store", "ignore_cert_errors"):
+        if not isinstance(getattr(cfg, flag), bool):
+            raise ValueError(f"{flag} in {CONFIG_PATH}: true oder false erwartet")
     for i, raw in enumerate(servers):
         srv = Server(id=raw.get("id", ""), name=raw.get("name", ""), trmm_url=raw.get("trmm_url", ""))
         _apply(srv, raw, f"server[{i}].")
@@ -129,6 +143,8 @@ def load() -> Config:
 
 
 def _toml_value(v) -> str:
+    if isinstance(v, list):
+        return "[" + ", ".join(_toml_value(x) for x in v) + "]"
     if isinstance(v, bool):
         return "true" if v else "false"
     if isinstance(v, int):

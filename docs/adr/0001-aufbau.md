@@ -1,6 +1,6 @@
 # ADR 0001: Aufbau
 
-Status: angenommen (2026-11-05), ergänzt durch ADR 0002
+Status: angenommen (2026-11-05), ergänzt durch ADR 0002 und ADR 0003
 
 ## Kontext
 
@@ -41,7 +41,7 @@ Verworfen:
   - SSH zum Sprung-Host,
   - Steuerseite und SOCKS-Verteiler auf `localhost`,
   - Geheimnisse (TRMM-API-Key, CA) im Schlüsselbund des Systems.
-- **Eigenes Browserprofil** (Brave bzw. Chromium, statt PAC-Datei im System): Der Client startet ein eigenes Profil mit `--proxy-server` auf seinen SOCKS-Verteiler und `--ignore-certificate-errors`, damit selbstsignierte Zertifikate nicht stören. Der Verteiler lässt nur Ziele und Netze aktiver Sitzungen durch und lehnt alles andere ab; das Profil kommt also nicht ins Internet, und das normale Surfen bleibt unberührt. Bei gleicher IP bei zwei Kunden gewinnt die neuere Sitzung.
+- **Eigenes Browserprofil** (Brave bzw. Chromium, statt PAC-Datei im System): Der Client startet ein eigenes Profil mit `--proxy-server` auf seinen SOCKS-Verteiler und `--ignore-certificate-errors`, damit selbstsignierte Zertifikate nicht stören. Der Verteiler lässt nur Ziele und Netze aktiver Sitzungen durch und lehnt alles andere ab; das Profil kommt also nicht ins Internet, und das normale Surfen bleibt unberührt. Bei gleicher IP bei zwei Kunden gewinnt die neuere Sitzung. (Seit ADR 0003: Zertifikate werden geprüft, Web Store und `direct_hosts` direkt erreichbar.)
 
 ### Notweg
 

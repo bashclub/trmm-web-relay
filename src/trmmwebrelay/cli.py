@@ -52,7 +52,9 @@ def cmd_serve(cfg: Config, args) -> None:
     app = App(cfg, registry, manager)
     if cfg.active:
         threading.Thread(target=registry.get(cfg.active.id).reload, daemon=True).start()
-    router = SocksRouter(cfg.socks_port, manager.resolve)
+    router = SocksRouter(
+        cfg.socks_port, manager.resolve, lambda host, port: browser.direct_allowed(cfg, host, port)
+    )
     router.start()
     serve(app)
     log.info("Steuerseite: %s", url)

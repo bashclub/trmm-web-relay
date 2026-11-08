@@ -1,9 +1,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 """Brave (oder ein anderer Chromium-Browser) mit eigenem Profil für Kundenzugriffe.
 
-Das Profil schickt alles an den lokalen SOCKS-Verteiler; der lässt nur Ziele
-aktiver Sitzungen durch. Darum darf dieses Profil Zertifikatsfehler
-ignorieren, ohne dass das beim normalen Surfen gilt.
+Das Profil schickt alles an den lokalen SOCKS-Verteiler. Der lässt Ziele
+aktiver Sitzungen durch den Tunnel und wenige freigegebene Hosts direkt ins
+Internet (Erweiterungen, Passwortmanager); alles andere lehnt er ab. So können
+fremde Webseiten in diesem Profil keine Anfragen in Kundennetze schicken.
+Zertifikate prüft das Profil wie ein normaler Browser.
 """
 
 import os
@@ -16,6 +18,46 @@ from trmmwebrelay.config import STATE_DIR, Config
 from trmmwebrelay.platform import WINDOWS, detached
 
 PROFILE_DIR = STATE_DIR / "browser"
+
+# Web Store und Download/Update von Erweiterungen (Chrome, Brave, Edge).
+# Erweiterungen sind signiert, darum hier auch Port 80.
+STORE_HOSTS = (
+    "chromewebstore.google.com",
+    "chrome.google.com",
+    "clients2.google.com",
+    "clients2.googleusercontent.com",
+    "update.googleapis.com",
+    "gvt1.com",
+    "lh3.googleusercontent.com",
+    "www.gstatic.com",
+    "ssl.gstatic.com",
+    "fonts.gstatic.com",
+    "fonts.googleapis.com",
+    "extensionupdater.brave.com",
+    "crxdownload.brave.com",
+    "microsoftedge.microsoft.com",
+    "edge.microsoft.com",
+)
+
+
+def _host_matches(host: str, entry: str) -> bool:
+    entry = entry.lower().strip().removeprefix("*.").rstrip(".")
+    return bool(entry) and (host == entry or host.endswith("." + entry))
+
+
+def direct_allowed(cfg: Config, host: str, port: int) -> bool:
+    """True, wenn das Profil host:port direkt (ohne Tunnel) erreichen darf."""
+    host = host.lower().rstrip(".")
+    if cfg.extension_store and port in (80, 443):
+        if any(_host_matches(host, e) for e in STORE_HOSTS):
+            return True
+    for raw in cfg.direct_hosts:
+        entry, sep, p = raw.strip().rpartition(":")
+        if not (sep and p.isdigit() and entry):
+            entry, p = raw.strip(), "443"
+        if int(p) == port and _host_matches(host, entry.strip("[]")):
+            return True
+    return False
 
 _CANDIDATES = [
     "brave-browser",
@@ -73,9 +115,9 @@ def open_url(cfg: Config, url: str) -> None:
             exe,
             f"--user-data-dir={PROFILE_DIR}",
             f"--proxy-server=socks5://127.0.0.1:{cfg.socks_port}",
-            "--ignore-certificate-errors",
             "--no-first-run",
             "--no-default-browser-check",
+            *(["--ignore-certificate-errors"] if cfg.ignore_cert_errors else []),
             url,
         ],
         stdin=subprocess.DEVNULL,

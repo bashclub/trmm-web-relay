@@ -2,8 +2,9 @@
 """SOCKS5: Client zum Tunnel und lokaler Verteiler für den Browser.
 
 Der Browser spricht nur mit dem Verteiler (127.0.0.1:<socks_port>). Der
-Verteiler leitet eine Verbindung nur dann weiter, wenn das Ziel zu einer
-aktiven Sitzung gehört; alles andere wird abgelehnt.
+Verteiler leitet eine Verbindung in den Tunnel, wenn das Ziel zu einer aktiven
+Sitzung gehört, und direkt ins Internet, wenn der Host freigegeben ist
+(Sitzungen haben Vorrang); alles andere wird abgelehnt.
 """
 
 import ipaddress
@@ -136,7 +137,10 @@ class _Handler(socketserver.BaseRequestHandler):
                 return
             route = self.server.resolve(host)
             if route is None:
-                log.debug("abgelehnt: %s:%s", host, port)
+                if self.server.direct(host, port):
+                    self._direct(client, host, port)
+                    return
+                self.server.rejected(host, port)
                 _reply(client, 2)
                 return
             try:
@@ -153,14 +157,41 @@ class _Handler(socketserver.BaseRequestHandler):
         except (OSError, SocksError):
             pass
 
+    def _direct(self, client: socket.socket, host: str, port: int) -> None:
+        """Freigegebener Host: direkt verbinden, zählt nicht als Aktivität einer Sitzung."""
+        try:
+            upstream = socket.create_connection((host, port), timeout=15)
+        except OSError:
+            _reply(client, 4)
+            return
+        _reply(client, 0)
+        relay(client, upstream, lambda: None)
+
 
 class SocksRouter(socketserver.ThreadingTCPServer):
     daemon_threads = True
     allow_reuse_address = True
 
-    def __init__(self, port: int, resolve: Callable[[str], Route | None]):
+    def __init__(
+        self,
+        port: int,
+        resolve: Callable[[str], Route | None],
+        direct: Callable[[str, int], bool] = lambda host, port: False,
+    ):
         super().__init__(("127.0.0.1", port), _Handler)
         self.resolve = resolve
+        self.direct = direct
+        self._rejected: set[str] = set()
+        self._rejected_lock = threading.Lock()
+
+    def rejected(self, host: str, port: int) -> None:
+        """Ablehnung loggen, je Ziel nur einmal (hilft beim Pflegen von direct_hosts)."""
+        key = f"{host}:{port}"
+        with self._rejected_lock:
+            if key in self._rejected:
+                return
+            self._rejected.add(key)
+        log.info("abgelehnt (kein Ziel einer Sitzung, nicht in direct_hosts): %s", key)
 
     def start(self) -> None:
         threading.Thread(target=self.serve_forever, daemon=True, name="socks").start()

@@ -21,7 +21,11 @@ Im Tunnel erreichbar sind nicht nur die eingetragenen Ziele, sondern alle Adress
 
 Mehrere Sitzungen zu verschiedenen Sites können gleichzeitig offen sein, auch wenn die Kunden dieselben Adressbereiche nutzen. Dann geht eine Adresse an die neuere Sitzung. Wer zwischen zwei Kunden mit gleichem Netz wechselt, beendet am besten die alte Sitzung.
 
-Zertifikatswarnungen zeigt das Profil nicht, selbstsignierte Zertifikate der Geräte stören also nicht. Passwörter speichert das Profil wie ein normaler Browser; es liegt in `~/.local/share/trmm-web-relay/browser`.
+Selbstsignierte Zertifikate der Geräte zeigen die übliche Warnung des Browsers: **Erweitert → Weiter zu … (unsicher)**. Der Browser merkt sich die Ausnahme je Adresse, bis er geschlossen wird. Ins Internet kommt das Profil nur zu wenigen freigegebenen Hosts, etwa für einen Passwortmanager, siehe [Erweiterungen und Passwortmanager](05-erweiterungen.md). Das Profil liegt in `~/.local/share/trmm-web-relay/browser` und bleibt beim Beenden und bei Updates erhalten.
+
+:::info
+**Geändert in 0.3:** Bis 0.2 hat das Profil Zertifikatsfehler ignoriert und keine Warnung gezeigt. Ab 0.3 prüft es Zertifikate wie ein normaler Browser, damit Erweiterungen wie ein Passwortmanager sicher ins Internet dürfen. Wer das alte Verhalten braucht, setzt `ignore_cert_errors = true` ([Konfiguration](../06-referenz/02-konfiguration.md#ignore_cert_errors)). Läuft das Profil beim Update noch, gilt die Änderung erst, wenn alle seine Fenster geschlossen waren.
+:::
 
 ## Beenden
 - **Beenden** bei der Site beendet diese Sitzung.

@@ -25,6 +25,9 @@ jump = "relay.example.com:22222"
 | `idle_minutes` | `30` | Leerlauf bis zum Ende einer Sitzung |
 | `max_hours` | `4` | Höchstdauer einer Sitzung |
 | `browser` | leer | Pfad zum Browser |
+| `direct_hosts` | leer | Hosts, die das Profil direkt erreicht |
+| `extension_store` | `true` | Web Store und Updates für Erweiterungen erreichbar |
+| `ignore_cert_errors` | `false` | Zertifikatsfehler im Profil ignorieren |
 | `active_server` | leer | Server, den die Steuerseite zeigt |
 | `id` | – | Kennung des Servers (Pflicht) |
 | `name` | `id` | Anzeigename |
@@ -51,6 +54,19 @@ Stunden, nach denen eine Sitzung spätestens endet. Gilt auch als Laufzeitgrenze
 
 ### `browser`
 Pfad zu einem Chromium-basierten Browser. Leer: Der Client sucht Brave, Chromium, Google Chrome und (unter Windows) Microsoft Edge, in dieser Reihenfolge. Firefox geht nicht, weil der Client die Chromium-Schalter für Profil und Proxy nutzt.
+
+### `direct_hosts`
+Ab 0.3. Liste von Hosts, die das Browserprofil direkt ins Internet erreicht, ohne Tunnel, z. B. der Server eines Passwortmanagers. Ein Eintrag gilt für den Host und alle Subdomains, nur auf Port 443; ein anderer Port steht dahinter:
+```toml
+direct_hosts = ["bitwarden.eu", "vault.example.com:8443"]
+```
+Sitzungen haben Vorrang: Ist ein Host zugleich Ziel einer offenen Sitzung, geht er durch den Tunnel. Verbindungen zu diesen Hosts zählen nicht als Aktivität einer Sitzung. Welche Hosts das Profil vergeblich aufrufen wollte, steht im Log (`abgelehnt …`). Nur vertrauenswürdige Hosts eintragen: Jede Seite, die das Profil laden kann, könnte Anfragen an die Geräte in offenen Tunneln schicken. Siehe [Erweiterungen und Passwortmanager](../04-bedienung/05-erweiterungen.md).
+
+### `extension_store`
+Ab 0.3. `true`: Das Profil erreicht den Chrome Web Store und die Download- und Update-Server für Erweiterungen von Chrome, Brave und Edge. `false`: Erweiterungen lassen sich weder installieren noch aktualisieren.
+
+### `ignore_cert_errors`
+Ab 0.3. `true`: Das Profil startet mit `--ignore-certificate-errors` und zeigt keine Zertifikatswarnungen, so wie bis 0.2. Das gilt dann auch für `direct_hosts` und den Web Store: Wer im Netz des Technikers mitliest, könnte sich etwa als Server des Passwortmanagers ausgeben. Darum `false` lassen, wenn `direct_hosts` gesetzt ist. Die Änderung wirkt erst, wenn alle Fenster des Profils geschlossen waren.
 
 ### `active_server`
 `id` des Servers, den die Steuerseite zeigt. Setzt die Auswahl oben auf der Steuerseite. Leer oder unbekannt: der erste Server.
