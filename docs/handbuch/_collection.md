@@ -12,7 +12,7 @@ Dieses Handbuch beschreibt Version 0.3.
 1. [Schnellstart](01-schnellstart/_index.md) – in 30 Minuten von null bis zur ersten Weboberfläche
 2. [Konzept und Grundlagen](02-konzept/_index.md) – was Web-Relay tut, Ablauf, Sicherheitsmodell, Vergleich mit VPN
 3. [Installation und Einrichtung](03-installation/_index.md) – TRMM vorbereiten, Sprung-Host, Client, weitere Techniker
-4. [Bedienung](04-bedienung/_index.md) – Steuerseite, Verbinden, Sites bearbeiten, mehrere TRMM-Server
+4. [Bedienung](04-bedienung/_index.md) – Steuerseite, Verbinden, Sites bearbeiten, mehrere TRMM-Server, Passwortmanager
 5. [Betrieb und Wartung](05-betrieb/_index.md) – Updates, Logs, CrowdSec, Zugang entziehen, Sicherung
 6. [Referenz](06-referenz/_index.md) – Befehle, Einstellungen, Felder, Variablen, Rechte, Dateien
 7. [Fehlerbehebung und FAQ](07-fehlerbehebung/_index.md) – Diagnose, typische Fehler, häufige Fragen

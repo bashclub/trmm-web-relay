@@ -1,8 +1,8 @@
 ---
 title: Erweiterungen und Passwortmanager
 audience: Anwender, Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/erweiterungen-und-passwortmanager-QbzLg79Lo9
+outline_id: 315ad1b9-fbb4-48a8-8350-117d09eb5b8b
 ---
 Ab 0.3 lassen sich im Web-Relay-Profil Browser-Erweiterungen nutzen, vor allem ein Passwortmanager wie Bitwarden. So kommen alle Techniker mit Zugriff auf den gemeinsamen Tresor an die Zugangsdaten der Geräte, nicht nur der, der sie im Browser gespeichert hat.
 
