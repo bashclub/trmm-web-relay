@@ -1,0 +1,6 @@
+__pycache__/
+*.egg-info/
+.venv/
+# Interne Notizen (nicht veröffentlichen)
+CLAUDE.local.md
+intern/

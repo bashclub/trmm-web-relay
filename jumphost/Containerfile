@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Sprung-Host für TRMM Web-Relay: nur sshd, keine weiteren Dienste.
+#
+# Anmeldung nur mit Zertifikaten der Clients (TRUSTED_CA), Sites und
+# erlaubte Absender aus TRMM. Einstellungen per Umgebung (entrypoint.sh),
+# der TRMM-Key (nur lesen) als Secret, Host-Schlüssel im Volume
+# /var/lib/jumphost.
+
+FROM docker.io/library/debian:trixie-slim
+
+RUN export DEBIAN_FRONTEND=noninteractive \
+	&& apt-get update \
+	&& apt-get upgrade -y \
+	&& apt-get install -y --no-install-recommends openssh-server curl jq ca-certificates \
+	&& rm -rf /var/lib/apt/lists/* /etc/ssh/ssh_host_* /etc/ssh/sshd_config.d/*
+
+COPY sshd_config /etc/ssh/sshd_config
+COPY entrypoint.sh /usr/local/sbin/entrypoint.sh
+COPY refresh-allowed.sh /usr/local/sbin/refresh-allowed
+COPY principals.sh /usr/local/sbin/principals
+
+# Konten ohne Passwort (*, nicht gesperrt) und ohne Shell
+RUN for u in wr-keys wr-admin wr-tunnel; do \
+		useradd -M -d /nonexistent -s /usr/sbin/nologin -p '*' "$u"; \
+	done
+
+ENV SSH_PORT=2222 REMOTE_PORT_BASE=20000
+EXPOSE 2222
+VOLUME /var/lib/jumphost
+
+ENTRYPOINT ["/usr/local/sbin/entrypoint.sh"]

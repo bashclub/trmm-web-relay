@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>TRMM Web-Relay</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/icon.svg">
+<style>
+  :root { --fg:#1d2330; --muted:#6b7280; --line:#e5e7eb; --bg:#f7f7f8; --card:#fff;
+          --ok:#15803d; --warn:#b45309; --err:#b91c1c; --accent:#1d4ed8; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fg:#e5e7eb; --muted:#9ca3af; --line:#2f3542; --bg:#14161b; --card:#1c1f26;
+            --ok:#4ade80; --warn:#fbbf24; --err:#f87171; --accent:#93c5fd; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.45 system-ui, sans-serif; color:var(--fg); background:var(--bg); }
+  header { display:flex; gap:1rem; align-items:center; padding:.8rem 1.2rem; border-bottom:1px solid var(--line); background:var(--card); position:sticky; top:0; }
+  header h1 { font-size:1.1rem; margin:0; flex:1; }
+  input[type=search] { padding:.4rem .6rem; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--fg); width:16rem; }
+  button { font:inherit; padding:.35rem .8rem; border-radius:6px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer; }
+  button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  button:disabled { opacity:.5; cursor:default; }
+  main { max-width:1100px; margin:0 auto; padding:1rem 1.2rem 3rem; }
+  .server { margin-top:2rem; font-size:1.05rem; font-weight:700; border-bottom:2px solid var(--line); padding-bottom:.2rem; }
+  header a { color:var(--fg); }
+  .client { margin-top:1.4rem; font-weight:600; color:var(--muted); font-size:.85rem; text-transform:uppercase; letter-spacing:.04em; }
+  .site { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:.8rem 1rem; margin-top:.5rem; }
+  .row { display:flex; align-items:center; gap:.8rem; flex-wrap:wrap; }
+  .row .name { font-weight:600; flex:1; }
+  .meta { color:var(--muted); font-size:.85rem; }
+  .targets { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.6rem; }
+  .target { display:inline-flex; flex-direction:column; padding:.35rem .7rem; border:1px solid var(--line); border-radius:6px; text-decoration:none; color:var(--fg); background:var(--bg); max-width:22rem; }
+  a.target:hover, button.target:hover { border-color:var(--accent); }
+  button.target { text-align:left; }
+  .target small { color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .target.err small { color:var(--err); }
+  .state-bereit { color:var(--ok); } .state-startet { color:var(--warn); } .state-fehler { color:var(--err); }
+  .banner { padding:.6rem 1rem; border-radius:6px; background:var(--card); border:1px solid var(--err); color:var(--err); margin-top:1rem; }
+  label.all { color:var(--muted); font-size:.9rem; }
+  select, .edit input { font:inherit; padding:.35rem .5rem; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--fg); }
+  #server { font-weight:600; }
+  .srvname { font-weight:600; }
+  .edit { margin-top:.8rem; border-top:1px solid var(--line); padding-top:.8rem; display:grid; gap:.5rem; }
+  .edit h3 { font-size:.9rem; margin:.4rem 0 0; }
+  .edit .line { display:flex; gap:.4rem; align-items:center; }
+  .edit .line input.n { width:12rem; } .edit .line input.a { flex:1; }
+  .edit .line button { padding:.3rem .55rem; }
+  .edit .actions { display:flex; gap:.5rem; justify-content:flex-end; }
+  .err { color:var(--err); }
+  button.small { padding:.2rem .6rem; font-size:.85rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>TRMM Web-Relay</h1>
+  <span id="srvbox"></span>
+  <input type="search" id="q" placeholder="Kunde oder Site suchen" autofocus>
+  <label class="all"><input type="checkbox" id="all"> auch Sites ohne Ziele</label>
+  <button id="reload" title="Ziele neu aus TRMM laden">Neu laden</button>
+  <a href="/einrichtung">Einrichtung</a>
+  <button id="quit" title="Alle Sitzungen beenden und den Client schließen">Beenden</button>
+</header>
+<main id="main"></main>
+<script>
+const inProfile = new URLSearchParams(location.search).has("profil");
+let state = null;
+
+async function post(path, body) {
+  const r = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json", "X-Web-Relay": "1" }, body: JSON.stringify(body || {}) });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) alert(data.error || ("Fehler " + r.status));
+  return data;
+}
+
+function el(tag, attrs, ...children) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of children.flat()) if (c != null) e.append(c);
+  return e;
+}
+
+function mins(s) { return s >= 3600 ? Math.floor(s / 3600) + " h " + Math.floor(s % 3600 / 60) + " min" : Math.ceil(s / 60) + " min"; }
+
+function targetEl(t, ready) {
+  const sub = t.error ? t.error : (t.title && t.title !== t.name ? t.title + " · " : "") + t.url;
+  const cls = "target" + (t.error ? " err" : "");
+  const inner = [el("span", {}, t.name), el("small", {}, sub)];
+  if (!ready) return el("span", { class: cls }, inner);
+  if (inProfile) return el("a", { class: cls, href: t.url, target: "_blank", rel: "noopener" }, inner);
+  return el("button", { class: cls, onclick: () => post("/api/open", { url: t.url }) }, inner);
+}
+
+function siteEl(s) {
+  const sess = s.session;
+  const active = sess && (sess.state === "startet" || sess.state === "bereit");
+  const ready = sess && sess.state === "bereit";
+  const status = [];
+  if (sess) {
+    const txt = { startet: "startet", bereit: "verbunden", beendet: "beendet", fehler: "Fehler" }[sess.state];
+    status.push(el("span", { class: "state-" + sess.state }, txt + (sess.agent ? " über " + sess.agent : "")));
+    if (sess.message) status.push(" · " + sess.message);
+    if (ready) status.push(` · Leerlauf noch ${mins(sess.idle_left)}, höchstens ${mins(sess.max_left)}`);
+  } else if (s.agents.length) {
+    status.push("Tunnel-Agent: " + s.agents.join(", "));
+  }
+  const notes = sess && sess.notes.length ? el("div", { class: "meta" }, "Hinweis: " + sess.notes.join("; ")) : null;
+  const nets = ready && sess.networks.length ? el("div", { class: "meta" }, "Netze im Tunnel: " + sess.networks.join(", ")) : null;
+  const targets = ready ? sess.targets : s.targets.map(t => ({ name: t.name || t.addr, url: t.addr, title: "", error: "" }));
+  const btn = active
+    ? el("button", { onclick: () => post("/api/stop", { session_id: sess.id }).then(refresh) }, "Beenden")
+    : el("button", { class: "primary", disabled: !s.targets.length, onclick: () => post("/api/connect", { server_id: state.active, site_id: s.id }).then(refresh) }, "Verbinden");
+  const editBtn = el("button", { class: "small", title: "Ziele und Tunnel-Agenten bearbeiten (schreibt in TRMM)", onclick: () => openEditor(s) }, "Bearbeiten");
+  return el("div", { class: "site", id: "site-" + s.id },
+    el("div", { class: "row" }, el("span", { class: "name" }, s.name), el("span", { class: "meta" }, status), editBtn, btn),
+    notes, nets,
+    s.target_errors.length ? el("div", { class: "meta state-fehler" }, "Nicht lesbar: " + s.target_errors.join("; ")) : null,
+    targets.length ? el("div", { class: "targets" }, targets.map(t => targetEl(t, ready))) : null,
+    editing && editing.site.id === s.id ? editorEl() : null);
+}
+
+// --- Bearbeiten: Entwurf im Speicher, Anzeige wird solange nicht neu aufgebaut ---
+let editing = null;
+
+async function openEditor(s) {
+  editing = {
+    site: s,
+    targets: s.targets.map(t => ({ name: t.name, addr: t.addr })).concat(s.targets.length ? [] : [{ name: "", addr: "" }]),
+    agents: [...s.agents],
+    known: null, error: "", saving: false,
+  };
+  render();
+  const r = await fetch("/api/site/agents?site=" + s.id);
+  const data = await r.json().catch(() => ({}));
+  if (!editing || editing.site.id !== s.id) return;
+  editing.known = r.ok ? data.agents : [];
+  if (!r.ok) editing.error = data.error || "Agenten nicht ladbar";
+  redrawEditor();
+}
+
+function redrawEditor() {
+  const box = document.querySelector("#site-" + editing.site.id + " .edit");
+  if (box) box.replaceWith(editorEl());
+}
+
+function move(list, i, d) { const j = i + d; if (j < 0 || j >= list.length) return; [list[i], list[j]] = [list[j], list[i]]; redrawEditor(); }
+
+function editorEl() {
+  const e = editing;
+  const rows = e.targets.map((t, i) => el("div", { class: "line" },
+    el("input", { class: "n", placeholder: "Name (optional)", value: t.name, oninput: ev => { t.name = ev.target.value; } }),
+    el("input", { class: "a", placeholder: "192.168.1.1:8443 oder https://nas.local/", value: t.addr, oninput: ev => { t.addr = ev.target.value; } }),
+    el("button", { title: "nach oben", onclick: () => move(e.targets, i, -1) }, "↑"),
+    el("button", { title: "nach unten", onclick: () => move(e.targets, i, 1) }, "↓"),
+    el("button", { title: "entfernen", onclick: () => { e.targets.splice(i, 1); redrawEditor(); } }, "✕")));
+  const agentRows = e.agents.map((a, i) => {
+    const k = (e.known || []).find(x => x.hostname === a);
+    const info = k ? `${k.plat}, ${k.status}${k.usable ? "" : ", nicht unterstützt"}` : (e.known ? "kein Agent dieser Site" : "");
+    return el("div", { class: "line" },
+      el("span", { class: "a" }, (i + 1) + ". " + a + " ", el("span", { class: "meta" }, info)),
+      el("button", { title: "nach oben", onclick: () => move(e.agents, i, -1) }, "↑"),
+      el("button", { title: "nach unten", onclick: () => move(e.agents, i, 1) }, "↓"),
+      el("button", { title: "entfernen", onclick: () => { e.agents.splice(i, 1); redrawEditor(); } }, "✕"));
+  });
+  const choices = (e.known || []).filter(a => !e.agents.includes(a.hostname));
+  const pick = el("select", { onchange: ev => { if (ev.target.value) { e.agents.push(ev.target.value); redrawEditor(); } } },
+    el("option", { value: "" }, e.known ? (choices.length ? "Agent hinzufügen …" : "keine weiteren Agenten") : "Agenten werden geladen …"),
+    choices.map(a => el("option", { value: a.hostname, disabled: !a.usable },
+      `${a.hostname} (${a.plat}, ${a.status}${a.usable ? "" : ", nicht unterstützt"})`)));
+  return el("div", { class: "edit" },
+    el("h3", {}, "Websites"),
+    rows,
+    el("div", {}, el("button", { class: "small", onclick: () => { e.targets.push({ name: "", addr: "" }); redrawEditor(); } }, "+ Website")),
+    el("h3", {}, "Tunnel-Agenten (Reihenfolge = Priorität; leer: ein Server der Site, der online ist)"),
+    agentRows,
+    el("div", {}, pick),
+    e.error ? el("div", { class: "err" }, e.error) : null,
+    el("div", { class: "actions" },
+      el("button", { onclick: () => { editing = null; render(); } }, "Abbrechen"),
+      el("button", { class: "primary", disabled: e.saving, onclick: saveEditor }, e.saving ? "Speichert …" : "In TRMM speichern")));
+}
+
+async function saveEditor() {
+  const e = editing;
+  e.saving = true; e.error = ""; redrawEditor();
+  const r = await fetch("/api/site/save", { method: "POST", headers: { "Content-Type": "application/json", "X-Web-Relay": "1" },
+    body: JSON.stringify({ site_id: e.site.id, targets: e.targets, agents: e.agents }) });
+  const data = await r.json().catch(() => ({}));
+  if (editing !== e) return;
+  if (!r.ok) { e.saving = false; e.error = data.error || ("Fehler " + r.status); redrawEditor(); return; }
+  editing = null;
+  await refresh();
+}
+
+// --- Server umschalten ---
+function serverBox() {
+  const box = document.getElementById("srvbox");
+  if (state.servers.length < 2) {
+    const one = state.servers[0];
+    box.replaceChildren(one ? el("span", { class: "srvname" }, one.name) : "");
+    return;
+  }
+  const sel = box.querySelector("select");
+  if (sel && sel.dataset.ids === state.servers.map(x => x.id).join() && sel.value === state.active) return;
+  box.replaceChildren(el("select", { id: "server", title: "TRMM-Server", "data-ids": state.servers.map(x => x.id).join(),
+    onchange: async ev => {
+      const target = ev.target.value;
+      if (state.active_sessions && !confirm(`${state.active_sessions} offene Verbindung(en) werden beendet. Umschalten?`)) {
+        ev.target.value = state.active; return;
+      }
+      ev.target.disabled = true; editing = null;
+      document.getElementById("main").replaceChildren(el("p", { class: "meta" }, "Lade Sites …"));
+      await post("/api/switch", { server_id: target });
+      await refresh();
+    } },
+    state.servers.map(x => el("option", { value: x.id, selected: x.id === state.active }, x.name))));
+}
+
+function render() {
+  if (!state) return;
+  if (!state.configured) { location.replace("/einrichtung" + location.search); return; }
+  serverBox();
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  const all = document.getElementById("all").checked;
+  const main = document.getElementById("main");
+  main.replaceChildren();
+  if (state.error) main.append(el("div", { class: "banner" }, state.error));
+  let lastClient = null;
+  for (const s of state.sites) {
+    const isEdit = editing && editing.site.id === s.id;
+    if (!all && !s.targets.length && !s.session && !isEdit) continue;
+    if (q && !isEdit && !(s.client + " " + s.name).toLowerCase().includes(q)) continue;
+    if (s.client !== lastClient) { main.append(el("div", { class: "client" }, s.client)); lastClient = s.client; }
+    main.append(siteEl(s));
+  }
+  if (!main.querySelector(".site") && !state.error) main.append(el("p", { class: "meta" },
+    state.loaded_at ? "Keine Sites mit Zielen. „auch Sites ohne Ziele“ anhaken und bei einer Site „Bearbeiten“." : "Lade Sites …"));
+}
+
+async function refresh() {
+  try { state = await (await fetch("/api/state")).json(); } catch (e) { return; }
+  if (editing) { serverBox(); return; }  // Entwurf nicht überschreiben
+  render();
+}
+
+document.getElementById("q").addEventListener("input", render);
+document.getElementById("all").addEventListener("change", render);
+document.getElementById("reload").addEventListener("click", async (e) => {
+  e.target.disabled = true; await post("/api/reload"); await refresh(); e.target.disabled = false;
+});
+document.getElementById("quit").addEventListener("click", async () => {
+  if (!confirm("Alle Sitzungen beenden und den Client schließen?")) return;
+  await post("/api/quit");
+  document.body.replaceChildren(el("main", {}, el("p", {}, "Client beendet. Neu starten über das Symbol auf dem Desktop.")));
+  clearInterval(timer);
+});
+refresh();
+const timer = setInterval(refresh, 2000);
+</script>
+</body>
+</html>

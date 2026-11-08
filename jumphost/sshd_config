@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# sshd für den Sprung-Host. Port setzt entrypoint.sh (SSH_PORT).
+
+HostKey /var/lib/jumphost/ssh_host_ed25519_key
+# Nur IPv4: die Absenderprüfung vergleicht mit den IPv4-Adressen aus TRMM
+AddressFamily inet
+
+# Nur Zertifikate der vertrauten CAs (TRUSTED_CA), keine einzelnen Schlüssel.
+# Principals, Ports und erlaubte Absender je Anmeldung frisch (principals.sh).
+AuthorizedKeysFile none
+TrustedUserCAKeys /run/jumphost/trusted_ca.pub
+AuthorizedPrincipalsCommand /usr/local/sbin/principals %u
+AuthorizedPrincipalsCommandUser wr-keys
+
+# AllowUsers schreibt entrypoint.sh (wr-admin ggf. nur aus ADMIN_FROM)
+Include /run/jumphost/allow.conf
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+UsePAM no
+
+# Keine Shell, keine Befehle, nur Weiterleitungen
+ForceCommand /usr/sbin/nologin
+PermitTTY no
+X11Forwarding no
+AllowAgentForwarding no
+AllowStreamLocalForwarding no
+PermitTunnel no
+PermitUserRC no
+GatewayPorts no
+AllowTcpForwarding no
+
+# Tunnel ohne Gegenstelle nach etwa 45 s trennen, damit der Port frei wird
+ClientAliveInterval 15
+ClientAliveCountMax 3
+
+# Anmeldung mit Fingerabdruck und Weiterleitungen im Log
+LogLevel VERBOSE
+
+# Agenten: nur den Port ihrer Site auf 127.0.0.1 öffnen (permitlisten, from in principals.sh)
+Match User wr-tunnel
+	AllowTcpForwarding remote
+
+# Client: darf nur zu Tunnel-Ports auf 127.0.0.1 weiterleiten
+Match User wr-admin
+	AllowTcpForwarding local
+	PermitOpen 127.0.0.1:*

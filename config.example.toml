@@ -1,0 +1,28 @@
+# ~/.config/trmm-web-relay/config.toml. Am einfachsten über die Einrichtung
+# im Client pflegen. Keine Geheimnisse hier: API-Keys und CA liegen im
+# Schlüsselbund des Systems.
+
+# control_port = 8765    # Steuerseite
+# socks_port = 8766      # Verteiler für das Browserprofil
+# idle_minutes = 30
+# max_hours = 4
+# browser = ""           # leer: Brave/Chromium/Chrome/Edge suchen
+# active_server = ""     # Server, den die Steuerseite zeigt (umschalten oben in der Seite)
+
+# Je TRMM-Server ein Abschnitt
+[[server]]
+id = "mein-msp"                             # kurz, a-z 0-9 -, Name der Schlüssel im Schlüsselbund
+name = "Mein MSP"
+trmm_url = "https://api.example.com"
+jump = "relay.example.com:22222"            # Sprung-Host, für Agenten und diesen Rechner erreichbar
+# remote_port_base = 20000                  # wie REMOTE_PORT_BASE am Sprung-Host
+# field_targets = "Tunnel-Ziele"
+# field_agents = "Tunnel-Agent"
+# script_start = "Web-Relay: Tunnel starten"
+# script_stop = "Web-Relay: Tunnel stoppen"
+
+# [[server]]
+# id = "zweiter-msp"
+# name = "Zweiter MSP"
+# trmm_url = "https://api.example.org"
+# jump = "relay.example.org:22222"

@@ -1,0 +1,13 @@
+---
+title: Betrieb und Wartung
+audience: Admin
+outline:
+outline_id:
+---
+Was nach der Einrichtung regelmäßig oder bei Bedarf zu tun ist.
+
+- [Updates](01-updates.md): Client, Skripte in TRMM, Sprung-Host mit Auto-Update
+- [Logs](02-logs.md): was wo steht und wie man eine Sitzung nachvollzieht
+- [CrowdSec](03-crowdsec.md): Sprung-Host in eine Sperrliste einbinden, ohne Kunden auszusperren
+- [Zugang entziehen](04-zugang-entziehen.md): Techniker sperren, Key oder CA tauschen
+- [Sicherung](05-sicherung.md): was gesichert werden muss

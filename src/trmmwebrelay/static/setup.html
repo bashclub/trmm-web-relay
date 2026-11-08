@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>TRMM Web-Relay – Einrichtung</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/icon.svg">
+<style>
+  :root { --fg:#1d2330; --muted:#6b7280; --line:#e5e7eb; --bg:#f7f7f8; --card:#fff;
+          --ok:#15803d; --warn:#b45309; --err:#b91c1c; --accent:#1d4ed8; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fg:#e5e7eb; --muted:#9ca3af; --line:#2f3542; --bg:#14161b; --card:#1c1f26;
+            --ok:#4ade80; --warn:#fbbf24; --err:#f87171; --accent:#93c5fd; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.45 system-ui, sans-serif; color:var(--fg); background:var(--bg); }
+  header { display:flex; gap:1rem; align-items:center; padding:.8rem 1.2rem; border-bottom:1px solid var(--line); background:var(--card); }
+  header h1 { font-size:1.1rem; margin:0; flex:1; }
+  header a { color:var(--fg); }
+  main { max-width:900px; margin:0 auto; padding:1rem 1.2rem 3rem; }
+  h2 { font-size:1rem; margin:1.6rem 0 .5rem; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:.9rem 1rem; margin-top:.6rem; }
+  .row { display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+  .row .grow { flex:1; }
+  .meta { color:var(--muted); font-size:.88rem; }
+  label { display:block; margin-top:.6rem; font-weight:600; font-size:.9rem; }
+  input[type=text], input[type=password], input[type=url] { width:100%; padding:.45rem .6rem; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--fg); font:inherit; }
+  button, a.button { font:inherit; padding:.35rem .8rem; border-radius:6px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer; text-decoration:none; display:inline-block; }
+  button.primary, a.button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+  button:disabled { opacity:.5; cursor:default; }
+  .item { display:grid; grid-template-columns:5.5rem 1fr auto; gap:.3rem .8rem; padding:.55rem 0; border-top:1px solid var(--line); align-items:start; }
+  .item:first-child { border-top:0; }
+  .badge { font-size:.8rem; font-weight:700; text-transform:uppercase; }
+  .ok { color:var(--ok); } .fehlt { color:var(--warn); } .fehler { color:var(--err); } .info { color:var(--muted); }
+  code, pre { font-family:ui-monospace, monospace; font-size:.85rem; }
+  pre { white-space:pre-wrap; word-break:break-all; background:var(--bg); border:1px solid var(--line); border-radius:6px; padding:.5rem .6rem; margin:.4rem 0; }
+  .hidden { display:none; }
+  ol { padding-left:1.3rem; } li { margin:.25rem 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>TRMM Web-Relay – Einrichtung</h1>
+  <a href="/" id="back">Zu den Sites</a>
+</header>
+<main>
+  <div id="servers"></div>
+  <div class="card" id="detail" hidden></div>
+
+  <h2 id="form-title">Server hinzufügen</h2>
+  <div class="card">
+    <form id="form" autocomplete="off">
+      <input type="hidden" name="id">
+      <label>Name <span class="meta">(z. B. Name des MSP)</span></label>
+      <input type="text" name="name" required>
+      <label>TRMM-API-Adresse</label>
+      <input type="url" name="trmm_url" placeholder="https://api.example.com" required>
+      <label>API-Key <span class="meta" id="key-hint">(wird im Schlüsselbund gespeichert)</span></label>
+      <input type="password" name="api_key" autocomplete="new-password">
+      <p class="meta">Eigener TRMM-Benutzer mit Rolle ohne Kundenbeschränkung. Rechte: List Clients, List Agents,
+        View Custom Fields, List Scripts, Run Scripts. Für das Anlegen von Feldern und Skripten
+        aus der Einrichtung zusätzlich Manage Custom Fields und Manage Scripts (danach wieder entziehbar).</p>
+      <label>Sprung-Host <span class="meta">(host:port, kann auch später folgen)</span></label>
+      <input type="text" name="jump" placeholder="relay.example.com:22222">
+      <div class="row" style="margin-top:.9rem">
+        <button class="primary" type="submit">Speichern und prüfen</button>
+        <button type="button" id="cancel" class="hidden">Abbrechen</button>
+      </div>
+    </form>
+  </div>
+</main>
+<script>
+const qs = location.search;
+document.getElementById("back").href = "/" + qs;
+let current = null;
+
+async function post(path, body) {
+  const r = await fetch(path, { method: "POST", headers: { "Content-Type": "application/json", "X-Web-Relay": "1" }, body: JSON.stringify(body || {}) });
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data.error || ("Fehler " + r.status));
+  return data;
+}
+
+function el(tag, attrs, ...children) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else if (v !== false && v != null) e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of children.flat()) if (c != null) e.append(c);
+  return e;
+}
+
+async function loadServers() {
+  const st = await (await fetch("/api/setup")).json();
+  const box = document.getElementById("servers");
+  box.replaceChildren();
+  if (!st.servers.length) {
+    box.append(el("div", { class: "card" },
+      el("p", {}, "Willkommen! Noch kein Server eingerichtet."),
+      el("p", { class: "meta" }, "Ein Server ist eine TRMM-Instanz mit ihrem Sprung-Host. Unten Adresse und API-Key eintragen; die Einrichtung prüft dann Schritt für Schritt, was noch fehlt, und erledigt es auf Knopfdruck.")));
+  }
+  for (const s of st.servers) {
+    box.append(el("div", { class: "card" }, el("div", { class: "row" },
+      el("div", { class: "grow" }, el("strong", {}, s.name), el("div", { class: "meta" },
+        s.trmm_url + " · Sprung-Host " + (s.jump || "noch nicht eingetragen") + (s.has_key ? "" : " · API-Key fehlt"))),
+      el("button", { class: "primary", onclick: () => check(s) }, "Prüfen"),
+      el("button", { onclick: () => edit(s) }, "Bearbeiten"),
+      el("button", { onclick: () => remove(s) }, "Entfernen"))));
+  }
+  return st;
+}
+
+function edit(s) {
+  const f = document.getElementById("form");
+  f.elements["id"].value = s ? s.id : ""; f.elements["name"].value = s ? s.name : ""; f.elements["trmm_url"].value = s ? s.trmm_url : "";
+  f.elements["jump"].value = s ? s.jump : ""; f.elements["api_key"].value = "";
+  f.elements["api_key"].required = !s;
+  document.getElementById("key-hint").textContent = s ? "(leer lassen = unverändert)" : "(wird im Schlüsselbund gespeichert)";
+  document.getElementById("form-title").textContent = s ? "Server „" + s.name + "“ bearbeiten" : "Server hinzufügen";
+  document.getElementById("cancel").classList.toggle("hidden", !s);
+  if (s) f.scrollIntoView({ behavior: "smooth" });
+}
+
+async function remove(s) {
+  if (!confirm(`Server „${s.name}“ entfernen? API-Key und CA dieses Clients werden gelöscht; der Sprung-Host akzeptiert danach eine neue CA erst nach erneuter Installation bzw. Eintrag.`)) return;
+  try { await post("/api/setup/delete", { id: s.id }); } catch (e) { alert(e.message); }
+  document.getElementById("detail").hidden = true;
+  await loadServers();
+}
+
+function copyBtn(text) {
+  return el("button", { type: "button", onclick: (e) => { navigator.clipboard.writeText(text); e.target.textContent = "Kopiert"; } }, "Kopieren");
+}
+
+async function check(s) {
+  current = s;
+  const d = document.getElementById("detail");
+  d.hidden = false;
+  d.replaceChildren(el("strong", {}, s.name), el("p", { class: "meta" }, "Prüfe … (TRMM und Sprung-Host werden abgefragt)"));
+  d.scrollIntoView({ behavior: "smooth" });
+  let items;
+  try { items = (await post("/api/setup/check", { id: s.id })).items; }
+  catch (e) { d.replaceChildren(el("strong", {}, s.name), el("p", { class: "fehler" }, e.message)); return; }
+  const list = el("div", {});
+  let ca = null, done = true;
+  for (const it of items) {
+    if (it.state !== "ok") done = false;
+    if (it.id === "ca" && it.data.ca) ca = it.data;
+    const extra = [];
+    if (it.data.fingerprints && it.data.fingerprints.length) extra.push(el("pre", {}, it.data.fingerprints.join("\n")));
+    if (it.id === "ca" && it.data.ca) extra.push(el("pre", {}, it.data.ca), el("div", { class: "row" }, copyBtn(it.data.ca)));
+    const act = it.action ? el("button", { class: "primary", onclick: async (e) => {
+      if (it.writes_trmm && !confirm(`Das schreibt in TRMM (${s.trmm_url}):\n${it.action_label}: ${it.title}\n\nFortfahren?`)) return;
+      e.target.disabled = true;
+      try { const r = await post("/api/setup/action", { id: s.id, action: it.action, data: it.data }); } catch (err) { alert(err.message); }
+      check(s);
+    } }, it.action_label) : el("span");
+    list.append(el("div", { class: "item" },
+      el("span", { class: "badge " + it.state }, it.state),
+      el("div", {}, el("div", {}, it.title), it.detail ? el("div", { class: "meta" }, it.detail) : null, extra),
+      act));
+  }
+  const parts = [el("div", { class: "row" }, el("strong", { class: "grow" }, s.name), el("button", { onclick: () => check(s) }, "Neu prüfen")), list];
+  if (ca) {
+    parts.push(el("h2", {}, "Sprung-Host installieren oder aktualisieren"),
+      el("ol", {},
+        el("li", {}, "Linux-Server mit Podman (ab 4.4) bereitstellen, von außen TCP-Port ", el("code", {}, String((s.jump.split(":")[1]) || "22222")), " freigeben (nur IPv4)."),
+        el("li", {}, el("a", { class: "button primary", href: "/api/setup/installer?server=" + encodeURIComponent(s.id) }, "Installer herunterladen"),
+          " und auf den Server kopieren."),
+        el("li", {}, "Dort ", el("code", {}, "bash trmm-web-relay-sprunghost-" + s.id + ".sh"), " ausführen (als root oder Dienstbenutzer). Er fragt nach einem TRMM-Key nur zum Lesen (eigener Benutzer, Rechte List Clients und List Agents) und den Netzen der Techniker."),
+        el("li", {}, "Den Fingerabdruck am Ende mit dem oben angezeigten vergleichen und bestätigen.")),
+      el("p", { class: "meta" }, "Weitere Techniker richten ihren Client genauso ein und führen den Installer erneut aus: ihre CA kommt dazu, alles andere bleibt. Eigenes Deployment (z. B. Ansible): Umgebungsvariable TRUSTED_CA mit der CA-Zeile oben, siehe Handbuch, „Eigenes Deployment des Sprung-Hosts“."));
+  }
+  if (done) parts.push(el("p", { class: "ok" }, "Alles eingerichtet. ", el("a", { href: "/" + qs }, "Zu den Sites")));
+  d.replaceChildren(...parts);
+}
+
+document.getElementById("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = e.target, btn = f.querySelector("button[type=submit]");
+  btn.disabled = true;
+  try {
+    const r = await post("/api/setup/save", { id: f.elements["id"].value, name: f.elements["name"].value, trmm_url: f.elements["trmm_url"].value, api_key: f.elements["api_key"].value, jump: f.elements["jump"].value });
+    const st = await loadServers();
+    edit(null); f.reset();
+    check(st.servers.find(s => s.id === r.id));
+  } catch (err) { alert(err.message); }
+  btn.disabled = false;
+});
+document.getElementById("cancel").addEventListener("click", () => { edit(null); document.getElementById("form").reset(); });
+loadServers();
+</script>
+</body>
+</html>
