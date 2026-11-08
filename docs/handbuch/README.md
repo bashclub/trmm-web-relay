@@ -59,7 +59,11 @@ Das Handbuch beschreibt die aktuelle Version (siehe `_collection.md`). Neue Funk
 nächste Bereich), der Hinweis auf die Quelle; davor der Ko-fi-Block (Tabelle mit einer zentrierten Spalte:
 `kofi-block.png` mit Frage und Knopf, darunter der Link). Die Bilder (`kofi-block.png`, `kofi-button.png`, englisch
 `kofi-button-en.png` für die README) zeichnet `kofi-button.py` im Stil des Ko-fi-Widgets, mit Text, Farbe und Frage
-als Argumenten. Aufbereiten:
+als Argumenten. Den Block für dieses Handbuch erzeugt:
+```bash
+docs/handbuch/kofi-button.py docs/handbuch/kofi-block.png "Unterstütze die Entwicklung" "#E67224" "Gefällt dir TRMM Web-Relay?"
+```
+Aufbereiten:
 ```bash
 docs/handbuch/render.py list
 docs/handbuch/render.py render docs/handbuch/02-konzept/02-ablauf.md
