@@ -1,8 +1,8 @@
 ---
 title: Client installieren
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/client-installieren-7QZu0LgMDo
+outline_id: 3ad4826e-0efd-4289-9ff6-0a57e5827df3
 ---
 Der Client ist ein Python-Programm. Der Installer richtet es mit [uv](https://docs.astral.sh/uv/) als eigenständiges Werkzeug ein; uv bringt ein passendes Python mit, eine Python-Installation im System ist nicht nötig. Der Installer legt danach das Startsymbol an.
 

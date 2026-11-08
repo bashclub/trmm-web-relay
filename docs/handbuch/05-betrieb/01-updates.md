@@ -1,8 +1,8 @@
 ---
 title: Updates
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/updates-FcOU2s3dMG
+outline_id: 76664b9d-1ac1-411b-b7f4-2e5af30e3318
 ---
 ## Client
 ```bash

@@ -1,8 +1,8 @@
 ---
 title: Was ist TRMM Web-Relay
 audience: Anwender, Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/was-ist-trmm-web-relay-ZBNQVIEaZE
+outline_id: 06395e3b-0e11-41dd-9abe-a56e5a5c7b21
 ---
 TRMM Web-Relay öffnet Weboberflächen in Kundennetzen, ohne dass dafür ein Tunnel dauerhaft offen ist. Tactical RMM (TRMM) bringt Shell, Dateien und Fernsteuerung schon mit, aber keinen Weg zu den Weboberflächen von Firewall, Hypervisor, NAS, Switch oder Drucker. Diese Geräte haben oft keinen Agenten. Web-Relay schließt diese Lücke über einen Agenten, der in der Site ohnehin läuft.
 

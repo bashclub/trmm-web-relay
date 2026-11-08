@@ -1,8 +1,8 @@
 ---
 title: Kommandozeile
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/kommandozeile-rS7PNKljIe
+outline_id: 37d716bf-8069-4a20-8616-a8f7a7f78f88
 ---
 ```
 trmm-web-relay [-v] [Befehl]

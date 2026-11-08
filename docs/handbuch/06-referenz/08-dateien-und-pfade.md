@@ -1,8 +1,8 @@
 ---
 title: Dateien und Pfade
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/dateien-und-pfade-Zyn2PPCYUk
+outline_id: ff78fac3-54a2-4969-a0e1-a53d50d34cde
 ---
 ## Client
 Die Pfade gelten auf allen Systemen relativ zum Benutzerordner, unter Windows also z. B. `C:\Users\anna\.config\trmm-web-relay\`.

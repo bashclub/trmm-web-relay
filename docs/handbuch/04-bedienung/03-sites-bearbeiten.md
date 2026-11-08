@@ -1,8 +1,8 @@
 ---
 title: Sites bearbeiten
 audience: Anwender
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/sites-bearbeiten-MvxKdZ3vd2
+outline_id: 1118fcd1-0684-44c0-859c-a04b12a24f24
 ---
 Websites und Tunnel-Agenten einer Site stehen in TRMM in zwei Benutzerfeldern an der Site. Die Steuerseite bearbeitet sie direkt; der API-Key braucht dafür das Recht `Manage Sites`. Ohne das Recht pflegt man die Felder in TRMM selbst (Site bearbeiten → Custom Fields), im [Format der Felder](../06-referenz/03-site-felder.md).
 

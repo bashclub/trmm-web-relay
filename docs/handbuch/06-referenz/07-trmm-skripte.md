@@ -1,8 +1,8 @@
 ---
 title: TRMM-Skripte
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/trmm-skripte-nawAKuh7AV
+outline_id: b915696e-c758-43cb-8d16-edbcc922716b
 ---
 Die Einrichtung legt beide Skripte in TRMM an: Typ Shell, Plattformen Linux und macOS, Standard-Timeout 90 Sekunden, nicht als angemeldeter Benutzer. Die Quellen stehen in `trmm-scripts/` im Repository. Der Client vergleicht den Inhalt in TRMM mit seinem eigenen; jede Abweichung zeigt die Einrichtung als **veraltet oder von Hand geändert**.
 

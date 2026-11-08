@@ -1,8 +1,8 @@
 ---
 title: TRMM Web-Relay
 audience: Anwender, Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/collection/trmm-web-relay-h6Q0nUzzbv
+outline_id: 921bae53-859e-49b5-b99c-4aa88b94e708
 ---
 **TRMM Web-Relay** öffnet Weboberflächen in Kundennetzen bei Bedarf, ohne dauerhafte VPN-Tunnel: Firewall, Hypervisor, NAS, Switch, Drucker, auch auf Geräten ohne Agent. Ein Klick auf der lokalen Steuerseite lässt Tactical RMM (TRMM) auf einem Agenten beim Kunden einen zeitbegrenzten Tunnel zu einem Sprung-Host aufbauen. Ein eigenes Browserprofil öffnet dann die echte Adresse des Ziels. Nach der Sitzung ist nichts mehr offen. Freie Software unter GPL-3.0-or-later.
 

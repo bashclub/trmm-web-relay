@@ -1,8 +1,8 @@
 ---
 title: Typische Fehler
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/typische-fehler-ZWQl3R5CiH
+outline_id: 112d4af6-ad09-4d51-b816-5a64b7ba8661
 ---
 ## Permission denied beim Agenten
 Meldung: **Tunnel vom Agenten kam nicht innerhalb von 90 s an**, im Verlauf des Agenten `Permission denied (publickey)`, im Log des Sprung-Hosts `not from a permitted host`.

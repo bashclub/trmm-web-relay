@@ -1,8 +1,8 @@
 ---
 title: Einrichtung im Client
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/einrichtung-im-client-TSFfWFvbrl
+outline_id: 7b6f7f94-4aa0-4a46-adf6-3e4ff0d01c43
 ---
 Die Einrichtung ist eine Seite des Clients (`http://127.0.0.1:8765/einrichtung`). Beim ersten Start öffnet sie sich von selbst, später über **Einrichtung** oben auf der Steuerseite. Sie prüft je Server Schritt für Schritt, was fehlt, und erledigt es auf Knopfdruck. Was in TRMM schreibt, fragt vorher nach.
 

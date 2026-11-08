@@ -1,8 +1,8 @@
 ---
 title: Diagnose
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/diagnose-lVm6ET0zGU
+outline_id: 4d8d717c-1ee9-46ea-b6d1-ad6d18852742
 ---
 Ein Tunnel hat drei Abschnitte: Client → TRMM, Agent → Sprung-Host, Client → Sprung-Host. Die Meldung auf der Steuerseite sagt meist schon, welcher es ist. Sonst in dieser Reihenfolge prüfen.
 

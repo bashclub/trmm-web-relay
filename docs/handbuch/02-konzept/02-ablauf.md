@@ -1,8 +1,8 @@
 ---
 title: Ablauf einer Sitzung
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/ablauf-einer-sitzung-sCIaDgWde2
+outline_id: c9efe1fc-bc2e-465a-9c1d-4165ae1b12b7
 ---
 Eine Sitzung verbindet den Browser des Technikers mit dem Netz einer Site. Sie besteht aus zwei SSH-Verbindungen, die sich auf dem Sprung-Host treffen.
 

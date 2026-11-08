@@ -1,8 +1,8 @@
 ---
 title: Konfiguration des Clients
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/konfiguration-des-clients-MKKWxLCIMA
+outline_id: d96ef93e-fdbb-4380-be86-285833adedc5
 ---
 Die Einstellungen stehen in `~/.config/trmm-web-relay/config.toml` (anderer Pfad mit der Umgebungsvariable `TRMM_WEB_RELAY_CONFIG`). Die Einrichtung schreibt die Datei; von Hand braucht man sie nur für die selteneren Einstellungen. Geheimnisse stehen nie darin. Die Datei enthält nur Werte, die vom Standard abweichen. Nach einer Änderung von Hand den Client neu starten.
 

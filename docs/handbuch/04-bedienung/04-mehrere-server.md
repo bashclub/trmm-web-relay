@@ -1,8 +1,8 @@
 ---
 title: Mehrere TRMM-Server
 audience: Anwender, Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/mehrere-trmm-server-koqf3LGiOb
+outline_id: e6357193-e23e-4c03-a269-111fd40e910b
 ---
 Ein Client kann mehrere TRMM-Server kennen, z. B. die Instanz des eigenen MSP und die eines Partners, oder eine Test- und eine Produktivinstanz. Jeder Server hat seinen eigenen Sprung-Host, API-Key und seine eigene CA.
 

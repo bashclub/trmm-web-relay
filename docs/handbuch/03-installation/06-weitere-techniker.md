@@ -1,8 +1,8 @@
 ---
 title: Weitere Techniker
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/weitere-techniker-yAFWDSGNWb
+outline_id: 508b8bdb-943c-4a3e-983b-8cdca076d8b2
 ---
 Jeder Techniker hat einen eigenen Client mit eigener CA und eigenem TRMM-Key. Felder und Skripte in TRMM gibt es nur einmal je TRMM-Server, der Sprung-Host bleibt derselbe.
 

@@ -1,8 +1,8 @@
 ---
 title: Felder an der Site
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/felder-an-der-site-kafsV3DWIm
+outline_id: 603f30cc-352b-48c4-a7f1-fc456edb86a0
 ---
 Beide Felder sind Benutzerfelder (Custom Fields) an der **Site**, Typ **Text**. Die Steuerseite schreibt sie im passenden Format ([Sites bearbeiten](../04-bedienung/03-sites-bearbeiten.md)); dieses Format gilt, wenn man sie in TRMM oder per API selbst pflegt.
 

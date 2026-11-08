@@ -1,8 +1,8 @@
 ---
 title: Zugang entziehen
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/zugang-entziehen-S1M4uDsk7p
+outline_id: c2fe3a22-19fa-46e4-b58b-9f29f9d1f60b
 ---
 ## Techniker sperren
 Ein Techniker braucht für einen Tunnel zwei Dinge: einen TRMM-Key mit `Run Scripts` und eine CA, die der Sprung-Host kennt. Es reicht, eines davon zu entziehen; sauber ist beides.

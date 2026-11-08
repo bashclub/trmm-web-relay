@@ -1,8 +1,8 @@
 ---
 title: Häufige Fragen
 audience: Anwender, Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/haufige-fragen-2uDg8T8fHZ
+outline_id: 925091c7-6277-4549-b568-a28e5bc938db
 ---
 **Geht das auch mit Windows-Agenten?**
 Noch nicht. Das Tunnel-Skript gibt es für Linux und macOS. Ein PowerShell-Skript für Windows ist geplant. Bis dahin hilft ein kleiner Linux-Rechner mit TRMM-Agent in der Site.

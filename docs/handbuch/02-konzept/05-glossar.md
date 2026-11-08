@@ -1,8 +1,8 @@
 ---
 title: Glossar
 audience: Anwender, Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/glossar-E8DvalD4z3
+outline_id: 860289dc-f87f-4c7f-8677-274cd22b6a3b
 ---
 **Agent**: der TRMM-Agent auf einem Gerät beim Kunden. Für Web-Relay zählen Agenten unter Linux und macOS, die online sind.
 

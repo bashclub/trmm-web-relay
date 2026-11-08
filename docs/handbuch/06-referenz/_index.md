@@ -1,8 +1,8 @@
 ---
 title: Referenz
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/referenz-thz0WopKvz
+outline_id: c651d7eb-6931-43a9-89e1-011c848eded1
 ---
 Nachschlagen: alle Befehle, Einstellungen, Felder, Variablen, Rechte und Dateien.
 

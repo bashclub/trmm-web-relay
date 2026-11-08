@@ -1,8 +1,8 @@
 ---
 title: Bedienung
 audience: Anwender
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/bedienung-Rva97T3Lbc
+outline_id: e8b027eb-3258-420c-8b25-9c956500e891
 ---
 Dieser Bereich beschreibt die tägliche Arbeit mit dem Client: Steuerseite öffnen, verbinden, Ziele pflegen, zwischen TRMM-Servern wechseln.
 

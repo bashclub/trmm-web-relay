@@ -1,8 +1,8 @@
 ---
 title: TRMM vorbereiten
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/trmm-vorbereiten-id2CQQqMxz
+outline_id: 657828ad-d2c8-48c4-b0f2-087e7bd21e7b
 ---
 Web-Relay braucht zwei Arten von API-Keys: einen je Techniker für den Client und einen nur zum Lesen für den Sprung-Host. In TRMM gehört jeder API-Key zu einem Benutzer, und es zählen die Rechte von dessen Rolle. Ein Key, der einem anderen Benutzer gehört, bekommt 403, auch wenn die richtige Rolle existiert.
 

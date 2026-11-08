@@ -1,8 +1,8 @@
 ---
 title: Eigenes Deployment des Sprung-Hosts
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/eigenes-deployment-des-sprung-hosts-wgXlE9j6Ql
+outline_id: 46a98659-391b-467b-a3cd-9598dc01bc71
 ---
 Wer Server mit Ansible, Salt oder eigenen Quadlets verwaltet, braucht den Installer nicht. Das Image entsteht aus dem Ordner `jumphost/` im Repository, die Einstellungen kommen per Umgebung.
 

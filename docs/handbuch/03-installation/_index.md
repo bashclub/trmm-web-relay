@@ -1,8 +1,8 @@
 ---
 title: Installation und Einrichtung
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/installation-und-einrichtung-NvCwZnMwTT
+outline_id: 0c79d6e7-b4ca-4f72-8663-70d056c00473
 ---
 Dieser Bereich beschreibt jeden Schritt der Installation ausführlich. Der kurze Weg steht im [Schnellstart](../01-schnellstart/_index.md).
 

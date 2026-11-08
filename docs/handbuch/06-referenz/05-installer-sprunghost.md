@@ -1,8 +1,8 @@
 ---
 title: Installer des Sprung-Hosts
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/installer-des-sprung-hosts-HctJEoJ7tz
+outline_id: c9a39896-eece-40f6-9630-5cd8c8cfcc60
 ---
 Der Installer `trmm-web-relay-sprunghost-<server>.sh` kommt aus der Einrichtung des Clients. Er enthält die Quellen des Images und `install.sh`, dazu als Vorgabe TRMM-Adresse, CA und Port des Servers. Er läuft auf Linux mit Podman ab 4.4, als root oder als eigener Dienstbenutzer.
 

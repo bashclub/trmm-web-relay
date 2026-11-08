@@ -1,8 +1,8 @@
 ---
 title: CrowdSec
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/crowdsec-dpvz10qI6M
+outline_id: c7dcb7c4-07fd-4e95-a1ad-7d46a7fd8614
 ---
 Der Sprung-Host ist aus dem Internet erreichbar und bekommt Anmeldeversuche wie jeder SSH-Port. Seine Ablehnungen stehen als normale `sshd`-Zeilen im Journal, CrowdSec erkennt sie mit der Collection `crowdsecurity/sshd` ohne eigenen Parser.
 

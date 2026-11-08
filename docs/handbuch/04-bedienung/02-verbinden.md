@@ -1,8 +1,8 @@
 ---
 title: Verbinden und arbeiten
 audience: Anwender
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/verbinden-und-arbeiten-6PvMYwuw9A
+outline_id: 6513d6b1-61f8-4d03-98fc-9c0687293655
 ---
 ## Verbinden
 **Verbinden** bei einer Site. Der Knopf ist grau, solange die Site keine Ziele hat; dann zuerst [Sites bearbeiten](03-sites-bearbeiten.md). Der Status zeigt die Schritte:

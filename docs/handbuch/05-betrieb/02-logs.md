@@ -1,8 +1,8 @@
 ---
 title: Logs
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/logs-YxOCHCCnM1
+outline_id: 55012d6e-11d9-47c4-8a0f-3c50cbcd6c6c
 ---
 ## Client
 `~/.local/share/trmm-web-relay/client.log` (unter Windows `%USERPROFILE%\.local\share\trmm-web-relay\client.log`), rotiert bei 1 MB, zwei alte Dateien. Mit `trmm-web-relay -v` schreibt der Client ausführlicher. Geheimnisse stehen nie im Log.

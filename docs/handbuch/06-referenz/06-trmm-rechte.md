@@ -1,8 +1,8 @@
 ---
 title: TRMM-Rechte
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/trmm-rechte-Zg839KufkC
+outline_id: 3beed012-789f-492c-824a-4388a8c56585
 ---
 In TRMM gehört jeder API-Key einem Benutzer; es zählen die Rechte von dessen Rolle (Settings → Permissions Manager). Änderungen an der Rolle wirken sofort. Die Rolle darf nicht auf Kunden oder Sites eingeschränkt sein, sonst fehlen Sites oder Agenten.
 

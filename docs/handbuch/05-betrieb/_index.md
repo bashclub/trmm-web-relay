@@ -1,8 +1,8 @@
 ---
 title: Betrieb und Wartung
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/betrieb-und-wartung-3PLrowqyqp
+outline_id: a70e4ef7-c16c-4198-ae08-fbf8a287dffa
 ---
 Was nach der Einrichtung regelmäßig oder bei Bedarf zu tun ist.
 

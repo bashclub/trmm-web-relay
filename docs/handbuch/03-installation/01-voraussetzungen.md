@@ -1,8 +1,8 @@
 ---
 title: Voraussetzungen
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/voraussetzungen-e63pOmbH4J
+outline_id: 0edcf799-3a7e-4555-a7b9-0bceb5aaeb20
 ---
 ## TRMM
 - Die TRMM-API (z. B. `https://api.example.com`) muss für den Rechner des Technikers und für den Sprung-Host erreichbar sein. Steht sie hinter einer Allowlist, gehören beide hinein.

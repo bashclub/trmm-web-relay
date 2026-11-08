@@ -1,8 +1,8 @@
 ---
 title: Die Steuerseite
 audience: Anwender
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/die-steuerseite-Tq2ovph72U
+outline_id: 26ec2124-5bf5-4267-8858-fdc6a9887206
 ---
 ## Starten
 Doppelklick auf **TRMM Web-Relay** (Desktop, Startmenü bzw. Programme). Der Client startet im Hintergrund und öffnet die Steuerseite `http://127.0.0.1:8765/` in einem eigenen Browserfenster. Läuft er schon, öffnet der Doppelklick nur die Seite. Auf der Kommandozeile geht dasselbe mit `trmm-web-relay`.

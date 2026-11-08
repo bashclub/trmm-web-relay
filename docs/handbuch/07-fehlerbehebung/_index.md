@@ -1,8 +1,8 @@
 ---
 title: Fehlerbehebung und FAQ
 audience: Anwender, Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/fehlerbehebung-und-faq-9eSnCV7QF7
+outline_id: 6e7d0b68-743c-4aa3-a6e6-048e365fe332
 ---
 - [Diagnose](01-diagnose.md): in welcher Reihenfolge man sucht
 - [Typische Fehler](02-typische-fehler.md): Meldungen und was dahintersteckt

@@ -1,8 +1,8 @@
 ---
 title: Konzept und Grundlagen
 audience: Anwender, Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/konzept-und-grundlagen-u6gyWyEfPY
+outline_id: 67c3f105-1958-45cb-beda-84ee5edb7c3e
 ---
 Dieser Bereich erklärt, was TRMM Web-Relay tut und warum es so gebaut ist. Wer es einrichtet oder einem Kunden erklärt, sollte ihn einmal gelesen haben.
 

@@ -1,8 +1,8 @@
 ---
 title: Umgebung des Sprung-Hosts
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/umgebung-des-sprung-hosts-6JjCNACzfn
+outline_id: 2cd76c94-3e0f-46b6-9bf0-395387be916a
 ---
 Der Container des Sprung-Hosts wird nur über Umgebungsvariablen eingestellt. Der Installer schreibt sie nach `jumphost.env`; bei [eigenem Deployment](../03-installation/07-eigenes-deployment.md) setzt man sie selbst. Änderungen wirken nach einem Neustart des Dienstes.
 

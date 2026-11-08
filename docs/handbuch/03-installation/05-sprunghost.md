@@ -1,8 +1,8 @@
 ---
 title: Sprung-Host installieren
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/sprung-host-installieren-wrP4hZCGSX
+outline_id: 75e1a6c3-31a4-4d54-be4e-8897430ff531
 ---
 Den Installer für den Sprung-Host erzeugt der Client in der Einrichtung. Er ist eine einzelne Datei `trmm-web-relay-sprunghost-<server>.sh` mit den Quellen des Images, `install.sh` und den öffentlichen Werten dieses Servers (TRMM-Adresse, CA, Port). Geheimnisse enthält er nicht; den TRMM-Key fragt er auf dem Server ab.
 

@@ -1,8 +1,8 @@
 ---
 title: Vergleich mit VPN
 audience: Anwender, Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/vergleich-mit-vpn-q6RWXEuezN
+outline_id: 62c983b1-c9a8-4082-812c-6f26b1da0dbe
 ---
 Ein Mobile-VPN macht den Rechner des Technikers zum Teilnehmer im Kundennetz. Web-Relay öffnet auf Abruf einen schmalen, zeitbegrenzten Weg nur für den Browser, über einen Agenten, der in der Site schon läuft.
 

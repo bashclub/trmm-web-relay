@@ -1,8 +1,8 @@
 ---
 title: Sicherung
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/sicherung-REMLsiTwBk
+outline_id: 233df2cc-a6c0-4579-b09e-19b4426e7692
 ---
 ## Sprung-Host
 Zu sichern:

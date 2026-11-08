@@ -1,8 +1,8 @@
 ---
 title: Sicherheitsmodell
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/sicherheitsmodell-lkQevkkYfl
+outline_id: e992e6fd-a110-4b56-8bf0-14756db1e53c
 ---
 Web-Relay soll keinen neuen dauerhaften Zugang schaffen. Es nutzt das Vertrauen, das TRMM schon hat: Wer TRMM steuert, kann auf den Agenten ohnehin Skripte als root ausführen. Dazu kommen drei Grenzen: kurzlebige Zertifikate, eine Absenderprüfung auf dem Sprung-Host und ein Browserprofil, das nur die Ziele aktiver Sitzungen erreicht.
 

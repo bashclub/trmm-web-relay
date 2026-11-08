@@ -1,8 +1,8 @@
 ---
 title: Schnellstart
 audience: Admin
-outline:
-outline_id:
+outline: https://docs.bashclub.org/doc/schnellstart-Vb51m12cU8
+outline_id: 616beb04-19f3-4ab4-877e-9391d56ac227
 ---
 Diese Anleitung führt in sechs Schritten zur ersten Weboberfläche beim Kunden. Sie setzt eine laufende TRMM-Instanz voraus, Adminrechte darin und einen Linux-Server mit Podman, der aus dem Internet auf einem TCP-Port erreichbar ist. Hintergründe stehen im [Konzept](../02-konzept/_index.md), Einzelheiten zu jedem Schritt in [Installation und Einrichtung](../03-installation/_index.md).
 
