@@ -30,7 +30,7 @@ Fehlt der OpenSSH-Client: **Einstellungen → System → Optionale Features → 
 git -C trmm-web-relay pull
 sh trmm-web-relay/install/client.sh
 ```
-Danach den laufenden Client mit **Beenden** oben auf der Steuerseite schließen und neu starten. Einstellungen und Schlüssel bleiben. Was nach einem Update zu tun ist, steht in [Updates](../05-betrieb/01-updates.md).
+Danach den laufenden Client mit **Beenden** oben auf der Steuerseite schließen und neu starten. Einstellungen und Schlüssel bleiben. Ohne lokale Kopie, unter Windows und was eine neue Version verlangt: [Updates](../05-betrieb/01-updates.md).
 
 ## Andere Quelle
 Ohne lokale Kopie direkt aus dem Repository, z. B. für eine Verteilung per Softwareverteilung:
@@ -38,7 +38,7 @@ Ohne lokale Kopie direkt aus dem Repository, z. B. für eine Verteilung per Soft
 curl -fsSL https://code.bashclub.org/bashclub/trmm-web-relay/raw/branch/main/install/client.sh -o /tmp/wr-client.sh
 WR_SOURCE=git+https://code.bashclub.org/bashclub/trmm-web-relay.git sh /tmp/wr-client.sh
 ```
-`WR_SOURCE` nimmt alles, was `uv tool install` versteht, auch einen Tag (`git+https://…@v0.3.0`) oder einen eigenen Fork.
+`WR_SOURCE` nimmt alles, was `uv tool install` versteht, auch einen Tag (`git+https://…@v0.4.0`) oder einen eigenen Fork.
 
 ## Ohne Installation
 Zum Ausprobieren oder Entwickeln direkt aus dem Repository (Python ab 3.11):

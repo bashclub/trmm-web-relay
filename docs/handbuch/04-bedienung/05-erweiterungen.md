@@ -18,19 +18,18 @@ Alles andere lehnt er ab. Erweiterungen, die nur im Browser arbeiten, laufen als
 ```
 
 ## Bitwarden einrichten
-1. Server freigeben. In `~/.config/trmm-web-relay/config.toml` oben (vor dem ersten `[[server]]`) eintragen, je nach Bitwarden-Server:
-   ```toml
-   # Bitwarden Cloud, Region EU
-   direct_hosts = ["bitwarden.eu"]
-   # Bitwarden Cloud, Region US (Symbole von bitwarden.net)
-   # direct_hosts = ["bitwarden.com", "bitwarden.net"]
-   # eigener Server (Vaultwarden oder Bitwarden selbst gehostet)
-   # direct_hosts = ["vault.example.com"]
-   ```
-   Ein Eintrag gilt mit allen Subdomains, `bitwarden.eu` also auch für `vault.bitwarden.eu`, `api.bitwarden.eu` und `identity.bitwarden.eu`.
-2. Client beenden (**Beenden** oben auf der Steuerseite) und alle Fenster des Web-Relay-Profils schließen, dann neu starten.
-3. Im Profil die Erweiterung installieren: in der Adresszeile `chromewebstore.google.com` öffnen, nach „Bitwarden“ suchen, **Hinzufügen**. Das Symbol über das Puzzle-Symbol neben der Adresszeile anheften.
-4. In der Erweiterung beim Anmelden den Server wählen (bitwarden.com, bitwarden.eu oder **Selbst gehostet** mit eigener Adresse), anmelden.
+1. Server freigeben: **Einrichtung** → **Browserprofil** → unter **Direkt erreichbare Hosts** den Bitwarden-Server eintragen, **Speichern**. Gilt sofort.
+   | Server | Eintrag |
+   |---|---|
+   | Bitwarden Cloud, Region EU | `bitwarden.eu` |
+   | Bitwarden Cloud, Region US | `bitwarden.com` und `bitwarden.net` (Symbole) |
+   | eigener Server (Vaultwarden, Bitwarden selbst gehostet) | dessen Hostname, z. B. `vault.example.com` |
+
+   Ein Eintrag gilt mit allen Subdomains, `bitwarden.eu` also auch für `vault.bitwarden.eu`, `api.bitwarden.eu` und `identity.bitwarden.eu`. Wer Bitwardens Regeln für das automatische Ausfüllen nutzen will, trägt zusätzlich `fillassist.bitwarden.com` ein. Bis 0.3 steht die Liste nur in der Konfiguration (`direct_hosts`, [Konfiguration](../06-referenz/02-konfiguration.md#direct_hosts)); dann den Client danach neu starten.
+2. Im Profil die Erweiterung installieren: in der Adresszeile `chromewebstore.google.com` öffnen, nach „Bitwarden“ suchen, **Hinzufügen**. Das Symbol über das Puzzle-Symbol neben der Adresszeile anheften.
+3. In der Erweiterung beim Anmelden den Server wählen (bitwarden.com, bitwarden.eu oder **Selbst gehostet** mit eigener Adresse), anmelden.
+
+Jeder Techniker trägt seinen eigenen Server ein; die Einstellung gilt nur für seinen Benutzer auf seinem Rechner.
 
 Erweiterung, Server und Anmeldung bleiben im Profil gespeichert (`~/.local/share/trmm-web-relay/browser`), auch beim Beenden des Clients und bei Updates. Nach einem Neustart des Browsers fragt Bitwarden nur nach dem Master-Passwort bzw. der PIN, so wie eingestellt.
 

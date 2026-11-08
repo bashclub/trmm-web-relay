@@ -36,6 +36,8 @@
   .target.err small { color:var(--err); }
   .state-bereit { color:var(--ok); } .state-startet { color:var(--warn); } .state-fehler { color:var(--err); }
   .banner { padding:.6rem 1rem; border-radius:6px; background:var(--card); border:1px solid var(--err); color:var(--err); margin-top:1rem; }
+  .banner.note { border-color:var(--accent); color:var(--fg); }
+  .banner.note pre { margin:.4rem 0 0; font-family:ui-monospace, monospace; font-size:.85rem; white-space:pre-wrap; }
   label.all { color:var(--muted); font-size:.9rem; }
   select, .edit input { font:inherit; padding:.35rem .5rem; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--fg); }
   #server { font-weight:600; }
@@ -52,7 +54,7 @@
 </head>
 <body>
 <header>
-  <h1>TRMM Web-Relay</h1>
+  <h1>TRMM Web-Relay <span class="meta" id="ver"></span></h1>
   <span id="srvbox"></span>
   <input type="search" id="q" placeholder="Kunde oder Site suchen" autofocus>
   <label class="all"><input type="checkbox" id="all"> auch Sites ohne Ziele</label>
@@ -226,6 +228,12 @@ function render() {
   const all = document.getElementById("all").checked;
   const main = document.getElementById("main");
   main.replaceChildren();
+  const v = state.version || {};
+  document.getElementById("ver").textContent = v.current || "";
+  if (v.update) main.append(el("div", { class: "banner note" },
+    el("strong", {}, `Neue Version ${v.latest} verfügbar`), ` (installiert: ${v.current}). Aktualisieren im Terminal, danach „Beenden“ und neu starten:`,
+    el("pre", {}, "git -C trmm-web-relay pull\nsh trmm-web-relay/install/client.sh"),
+    el("div", { class: "meta" }, "Ohne lokale Kopie und unter Windows: Handbuch, „Betrieb und Wartung → Updates“. Dort steht auch, was die neue Version verlangt.")));
   if (state.error) main.append(el("div", { class: "banner" }, state.error));
   let lastClient = null;
   for (const s of state.sites) {

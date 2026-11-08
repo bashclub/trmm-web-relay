@@ -49,3 +49,13 @@ Jeder Server hat in der Liste oben die Knöpfe **Prüfen**, **Bearbeiten** und *
 **Bearbeiten** ändert Name, Adressen und Key. **Entfernen** löscht den Server aus der Konfiguration und API-Key und CA dieses Clients aus dem Schlüsselbund. Danach akzeptiert der Sprung-Host eine neue CA dieses Clients erst, wenn sie in `TRUSTED_CA` steht.
 
 Auf der Kommandozeile prüft `trmm-web-relay check` dasselbe für alle Server, nur lesend.
+
+## Browserprofil
+Ab 0.4. Unter den Servern stehen die Einstellungen des Browserprofils. Sie gelten nur für diesen Benutzer auf diesem Rechner; jeder Techniker trägt seine eigenen ein.
+| Feld | Bedeutung |
+|---|---|
+| Direkt erreichbare Hosts | Hosts, die das Profil ohne Tunnel erreicht, z. B. der Server des Passwortmanagers; einer je Zeile, mit Subdomains, Port 443 außer mit `:port` (`direct_hosts`) |
+| Web Store und Updates für Erweiterungen | Erweiterungen installieren und aktualisieren (`extension_store`) |
+| Zertifikatsfehler ignorieren | keine Warnungen bei selbstsignierten Geräten, dann aber auch keine Prüfung bei den Hosts oben (`ignore_cert_errors`) |
+
+**Speichern** prüft die Einträge und schreibt sie in die Konfiguration. Hosts und Web Store gelten sofort, die Zertifikatsprüfung erst, wenn alle Fenster des Profils geschlossen waren. Siehe [Erweiterungen und Passwortmanager](../04-bedienung/05-erweiterungen.md).

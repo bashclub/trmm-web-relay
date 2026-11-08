@@ -24,6 +24,9 @@
   .row .grow { flex:1; }
   .meta { color:var(--muted); font-size:.88rem; }
   label { display:block; margin-top:.6rem; font-weight:600; font-size:.9rem; }
+  textarea { width:100%; min-height:5rem; padding:.45rem .6rem; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--fg); font:.9rem ui-monospace, monospace; }
+  label.check { font-weight:400; display:flex; gap:.5rem; align-items:flex-start; }
+  label.check input { margin-top:.25rem; }
   input[type=text], input[type=password], input[type=url] { width:100%; padding:.45rem .6rem; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--fg); font:inherit; }
   button, a.button { font:inherit; padding:.35rem .8rem; border-radius:6px; border:1px solid var(--line); background:var(--card); color:var(--fg); cursor:pointer; text-decoration:none; display:inline-block; }
   button.primary, a.button.primary { background:var(--accent); border-color:var(--accent); color:#fff; }
@@ -68,6 +71,24 @@
       </div>
     </form>
   </div>
+
+  <h2>Browserprofil</h2>
+  <div class="card">
+    <form id="profile" autocomplete="off">
+      <p class="meta">Das Web-Relay-Profil erreicht außer den Zielen offener Sitzungen nur diese Hosts im Internet,
+        z. B. den Server eures Passwortmanagers. Die Einstellung gilt nur für diesen Benutzer auf diesem Rechner.</p>
+      <label>Direkt erreichbare Hosts <span class="meta">(einer je Zeile, mit Subdomains, Port 443 außer mit :port)</span></label>
+      <textarea name="direct_hosts" placeholder="vault.example.com&#10;bitwarden.eu"></textarea>
+      <label class="check"><input type="checkbox" name="extension_store">
+        <span>Web Store und Updates für Erweiterungen erreichbar <span class="meta">(nötig, um Erweiterungen wie Bitwarden zu installieren und aktuell zu halten)</span></span></label>
+      <label class="check"><input type="checkbox" name="ignore_cert_errors">
+        <span>Zertifikatsfehler ignorieren <span class="meta">(keine Warnungen bei selbstsignierten Geräten, aber dann auch keine Prüfung bei den Hosts oben und beim Web Store; nicht zusammen mit einem Passwortmanager)</span></span></label>
+      <div class="row" style="margin-top:.9rem">
+        <button class="primary" type="submit">Speichern</button>
+        <span class="meta" id="profile-msg"></span>
+      </div>
+    </form>
+  </div>
 </main>
 <script>
 const qs = location.search;
@@ -91,8 +112,32 @@ function el(tag, attrs, ...children) {
   return e;
 }
 
+function fillProfile(p) {
+  const f = document.getElementById("profile");
+  f.elements["direct_hosts"].value = (p.direct_hosts || []).join("\n");
+  f.elements["extension_store"].checked = !!p.extension_store;
+  f.elements["ignore_cert_errors"].checked = !!p.ignore_cert_errors;
+}
+
+document.getElementById("profile").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = e.target, msg = document.getElementById("profile-msg");
+  if (f.elements["ignore_cert_errors"].checked && f.elements["direct_hosts"].value.trim() &&
+      !confirm("Zertifikatsfehler ignorieren gilt auch für die direkt erreichbaren Hosts: Wer im Netz mitliest, könnte sich als Passwortmanager ausgeben. Trotzdem speichern?")) return;
+  msg.textContent = "";
+  try {
+    const r = await post("/api/setup/profile", {
+      direct_hosts: f.elements["direct_hosts"].value.split(/[\s,]+/).filter(Boolean),
+      extension_store: f.elements["extension_store"].checked,
+      ignore_cert_errors: f.elements["ignore_cert_errors"].checked });
+    msg.textContent = r.message; msg.className = "ok";
+    fillProfile((await (await fetch("/api/setup")).json()).profile);
+  } catch (err) { msg.textContent = err.message; msg.className = "fehler"; }
+});
+
 async function loadServers() {
   const st = await (await fetch("/api/setup")).json();
+  fillProfile(st.profile);
   const box = document.getElementById("servers");
   box.replaceChildren();
   if (!st.servers.length) {

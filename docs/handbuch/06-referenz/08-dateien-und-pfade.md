@@ -15,6 +15,7 @@ Die Pfade gelten auf allen Systemen relativ zum Benutzerordner, unter Windows al
 | `~/.local/share/trmm-web-relay/browser/` | eigenes Browserprofil |
 | `~/.local/share/trmm-web-relay/secrets/` | Geheimnisse, nur ohne nutzbaren Schlüsselbund (Rechte 0600) |
 | `~/.cache/trmm-web-relay/erkannt.json` | erkannte Protokolle und Seitentitel der Ziele |
+| `~/.cache/trmm-web-relay/version.json` | zuletzt abgefragte neueste Version (`update_url`) |
 | `<Temp>/wr-<sitzung>-…/` | Wegwerf-Schlüssel und SSH-Log einer Sitzung, beim Beenden gelöscht |
 
 ## Schlüsselbund

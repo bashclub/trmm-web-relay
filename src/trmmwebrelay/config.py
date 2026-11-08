@@ -21,6 +21,10 @@ CACHE_DIR = Path("~/.cache/trmm-web-relay").expanduser()
 ADMIN_USER = "wr-admin"  # Client, nur lokale Weiterleitung (-L)
 TUNNEL_USER = "wr-tunnel"  # Agenten, nur Fernweiterleitung (-R)
 
+DEFAULT_UPDATE_URL = "https://code.bashclub.org/bashclub/trmm-web-relay/raw/branch/main/pyproject.toml"
+
+_HOST_RE = re.compile(r"^(\*\.)?[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$")
+
 _ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,31}$")
 
 
@@ -68,6 +72,8 @@ class Config:
     extension_store: bool = True
     # Alte Arbeitsweise: Zertifikatsfehler im Profil ignorieren (auch bei direct_hosts)
     ignore_cert_errors: bool = False
+    # Quelle für den Hinweis auf neue Versionen (leer: keine Abfrage)
+    update_url: str = DEFAULT_UPDATE_URL
     # Server, dessen Sites die Steuerseite zeigt (immer nur einer)
     active_server: str = ""
     servers: list[Server] = field(default_factory=list)
@@ -91,6 +97,34 @@ def split_hostport(value: str) -> tuple[str, int]:
     if sep and port.isdigit() and host and not host.endswith(":"):
         return host.strip("[]"), int(port)
     return value.strip("[]"), DEFAULT_JUMP_PORT
+
+
+def normalize_direct_hosts(entries) -> list[str]:
+    """Prüft Einträge für direct_hosts (host, *.host, host:port); wirft ValueError."""
+    if isinstance(entries, str):
+        entries = entries.replace(",", " ").split()
+    if not isinstance(entries, list):
+        raise ValueError("direct_hosts: Liste von Hostnamen erwartet")
+    out = []
+    for raw in entries:
+        if not isinstance(raw, str):
+            raise ValueError("direct_hosts: Liste von Hostnamen erwartet")
+        entry = raw.strip().lower().rstrip(".")
+        if not entry:
+            continue
+        if "://" in entry or "/" in entry:
+            raise ValueError(f"„{raw}“: nur Hostname ohne https:// und Pfad, optional mit :port")
+        host, sep, port = entry.rpartition(":")
+        if not sep:
+            host, port = entry, ""
+        if port and not (port.isdigit() and 0 < int(port) < 65536):
+            raise ValueError(f"„{raw}“: ungültiger Port")
+        if not _HOST_RE.match(host):
+            raise ValueError(f"„{raw}“: nur Hostname, optional mit :port (z. B. vault.example.com:8443)")
+        value = f"{host}:{port}" if port else host
+        if value not in out:
+            out.append(value)
+    return out
 
 
 def valid_id(value: str) -> bool:
@@ -122,10 +156,12 @@ def load() -> Config:
     data = tomllib.loads(CONFIG_PATH.read_text())
     servers = data.pop("server", [])
     _apply(cfg, data, "", skip=("servers",))
-    if isinstance(cfg.direct_hosts, str):
-        cfg.direct_hosts = cfg.direct_hosts.replace(",", " ").split()
-    if not isinstance(cfg.direct_hosts, list) or not all(isinstance(h, str) for h in cfg.direct_hosts):
-        raise ValueError(f"direct_hosts in {CONFIG_PATH}: Liste von Hostnamen erwartet")
+    try:
+        cfg.direct_hosts = normalize_direct_hosts(cfg.direct_hosts)
+    except ValueError as e:
+        raise ValueError(f"{CONFIG_PATH}: {e}") from None
+    if not isinstance(cfg.update_url, str):
+        raise ValueError(f"update_url in {CONFIG_PATH}: Adresse als Text erwartet")
     for flag in ("extension_store", "ignore_cert_errors"):
         if not isinstance(getattr(cfg, flag), bool):
             raise ValueError(f"{flag} in {CONFIG_PATH}: true oder false erwartet")

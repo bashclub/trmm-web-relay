@@ -9,7 +9,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-from trmmwebrelay import browser, certs, config, hostkeys, installer, inventory, keystore, setup
+from trmmwebrelay import browser, certs, config, hostkeys, installer, inventory, keystore, setup, version
 from trmmwebrelay.config import Config, Server
 from trmmwebrelay.servers import Registry
 from trmmwebrelay.session import Session, SessionManager
@@ -60,6 +60,7 @@ class App:
             "error": b.error if b else "",
             "loaded_at": b.loaded_at if b else 0,
             "active_sessions": sum(1 for s in self.manager.sessions.values() if s.active),
+            "version": version.status(self.cfg),
             "sites": [
                 {
                     "id": s.id,
@@ -153,7 +154,29 @@ class App:
                 for s in self.cfg.servers
             ],
             "config_path": str(config.CONFIG_PATH),
+            "profile": {
+                "direct_hosts": self.cfg.direct_hosts,
+                "extension_store": self.cfg.extension_store,
+                "ignore_cert_errors": self.cfg.ignore_cert_errors,
+            },
         }
+
+    def save_profile(self, body: dict) -> str:
+        """Einstellungen des Browserprofils; der Verteiler nutzt sie sofort."""
+        hosts = config.normalize_direct_hosts(body.get("direct_hosts", []))
+        store = bool(body.get("extension_store", True))
+        ignore = bool(body.get("ignore_cert_errors", False))
+        with self._cfg_lock:
+            cert_changed = ignore != self.cfg.ignore_cert_errors
+            self.cfg.direct_hosts = hosts
+            self.cfg.extension_store = store
+            self.cfg.ignore_cert_errors = ignore
+            config.save(self.cfg)
+        log.info("Browserprofil: direct_hosts=%s, extension_store=%s, ignore_cert_errors=%s", hosts, store, ignore)
+        msg = "Gespeichert, gilt sofort."
+        if cert_changed:
+            msg += " Die Zertifikatsprüfung ändert sich erst, wenn alle Fenster des Profils geschlossen waren."
+        return msg
 
     def save_server(self, body: dict) -> str:
         name = str(body.get("name", "")).strip()
@@ -319,6 +342,8 @@ def make_handler(app: App):
                 return {"ok": True}
             if path == "/api/setup/save":
                 return {"id": app.save_server(body)}
+            if path == "/api/setup/profile":
+                return {"message": app.save_profile(body)}
             if path == "/api/setup/delete":
                 app.delete_server(str(body["id"]))
                 return {"ok": True}

@@ -28,6 +28,7 @@ jump = "relay.example.com:22222"
 | `direct_hosts` | leer | Hosts, die das Profil direkt erreicht |
 | `extension_store` | `true` | Web Store und Updates für Erweiterungen erreichbar |
 | `ignore_cert_errors` | `false` | Zertifikatsfehler im Profil ignorieren |
+| `update_url` | `pyproject.toml` auf `main` | Quelle für den Hinweis auf neue Versionen |
 | `active_server` | leer | Server, den die Steuerseite zeigt |
 | `id` | – | Kennung des Servers (Pflicht) |
 | `name` | `id` | Anzeigename |
@@ -56,7 +57,7 @@ Stunden, nach denen eine Sitzung spätestens endet. Gilt auch als Laufzeitgrenze
 Pfad zu einem Chromium-basierten Browser. Leer: Der Client sucht Brave, Chromium, Google Chrome und (unter Windows) Microsoft Edge, in dieser Reihenfolge. Firefox geht nicht, weil der Client die Chromium-Schalter für Profil und Proxy nutzt.
 
 ### `direct_hosts`
-Ab 0.3. Liste von Hosts, die das Browserprofil direkt ins Internet erreicht, ohne Tunnel, z. B. der Server eines Passwortmanagers. Ein Eintrag gilt für den Host und alle Subdomains, nur auf Port 443; ein anderer Port steht dahinter:
+Ab 0.3, ab 0.4 auch in der Einrichtung unter **Browserprofil**. Liste von Hosts, die das Browserprofil direkt ins Internet erreicht, ohne Tunnel, z. B. der Server eines Passwortmanagers. Ein Eintrag gilt für den Host und alle Subdomains, nur auf Port 443; ein anderer Port steht dahinter:
 ```toml
 direct_hosts = ["bitwarden.eu", "vault.example.com:8443"]
 ```
@@ -67,6 +68,9 @@ Ab 0.3. `true`: Das Profil erreicht den Chrome Web Store und die Download- und U
 
 ### `ignore_cert_errors`
 Ab 0.3. `true`: Das Profil startet mit `--ignore-certificate-errors` und zeigt keine Zertifikatswarnungen, so wie bis 0.2. Das gilt dann auch für `direct_hosts` und den Web Store: Wer im Netz des Technikers mitliest, könnte sich etwa als Server des Passwortmanagers ausgeben. Darum `false` lassen, wenn `direct_hosts` gesetzt ist. Die Änderung wirkt erst, wenn alle Fenster des Profils geschlossen waren.
+
+### `update_url`
+Ab 0.4. Adresse einer `pyproject.toml`, aus der der Client die neueste Version liest: beim Start und danach einmal am Tag, mit dem Ergebnis im Cache (`~/.cache/trmm-web-relay/version.json`). Standard: `https://code.bashclub.org/bashclub/trmm-web-relay/raw/branch/main/pyproject.toml`. Wer einen eigenen Fork verteilt, trägt dessen Datei ein. Leer (`update_url = ""`): keine Abfrage, kein Hinweis. Die Abfrage schickt nur die installierte Version im User-Agent mit.
 
 ### `active_server`
 `id` des Servers, den die Steuerseite zeigt. Setzt die Auswahl oben auf der Steuerseite. Leer oder unbekannt: der erste Server.

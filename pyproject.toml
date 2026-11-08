@@ -1,6 +1,6 @@
 [project]
 name = "trmm-web-relay"
-version = "0.3.0"
+version = "0.4.0"
 description = "Weboberflächen in Kundennetzen bei Bedarf öffnen, über Tactical RMM und einen Sprung-Host"
 requires-python = ">=3.11"
 license = "GPL-3.0-or-later"

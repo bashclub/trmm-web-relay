@@ -7,7 +7,7 @@ outline_id: 37d716bf-8069-4a20-8616-a8f7a7f78f88
 ```
 trmm-web-relay [-v] [Befehl]
 ```
-Ohne Befehl wie `serve`: Client starten bzw. die Steuerseite öffnen, wenn er schon läuft. Das Startsymbol ruft genau das auf. `-v` (`--verbose`) schreibt ausführlicher ins Log.
+Ohne Befehl wie `serve`: Client starten bzw. die Steuerseite öffnen, wenn er schon läuft. Das Startsymbol ruft genau das auf. `-v` (`--verbose`) schreibt ausführlicher ins Log. `--version` zeigt die installierte Version.
 
 Alle Befehle enden mit Status 0 bei Erfolg und 1 bei einem Fehler.
 
@@ -19,7 +19,7 @@ Startet den Client: Steuerseite auf `127.0.0.1:<control_port>`, SOCKS-Verteiler 
 | `--no-browser` | Steuerseite nicht öffnen |
 
 ## `check`
-Prüft die Einrichtung aller Server wie **Prüfen** in der Einrichtung, nur lesend, und ob ein Browser gefunden wird. Je Punkt eine Zeile mit `ok`, `info`, `FEHLT` oder `FEHLER`. Status 1, wenn etwas fehlt.
+Prüft die Einrichtung aller Server wie **Prüfen** in der Einrichtung, nur lesend, ob ein Browser gefunden wird und ob es eine neuere Version gibt (`update_url`; nur ein Hinweis, kein Fehler). Je Punkt eine Zeile mit `ok`, `info`, `FEHLT` oder `FEHLER`. Status 1, wenn etwas fehlt.
 ```
 Konfiguration: /home/anna/.config/trmm-web-relay/config.toml
 == Mein MSP
@@ -29,6 +29,7 @@ ok    Feld „Tunnel-Ziele“ an Sites
 …
 ok    Anmeldung am Sprung-Host
 ok    Browser: /usr/bin/brave-browser
+ok    Version 0.4.0
 ```
 
 ## `targets`

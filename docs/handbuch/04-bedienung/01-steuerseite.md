@@ -7,7 +7,7 @@ outline_id: 26ec2124-5bf5-4267-8858-fdc6a9887206
 ## Starten
 Doppelklick auf **TRMM Web-Relay** (Desktop, Startmenü bzw. Programme). Der Client startet im Hintergrund und öffnet die Steuerseite `http://127.0.0.1:8765/` in einem eigenen Browserfenster. Läuft er schon, öffnet der Doppelklick nur die Seite. Auf der Kommandozeile geht dasselbe mit `trmm-web-relay`.
 
-Das Fenster gehört zum eigenen Browserprofil von Web-Relay, nicht zum normalen Browser. Lesezeichen, Erweiterungen und Anmeldungen aus dem normalen Profil gibt es dort nicht; das ist gewollt.
+Das Fenster gehört zum eigenen Browserprofil von Web-Relay, nicht zum normalen Browser. Lesezeichen, Erweiterungen und Anmeldungen aus dem normalen Profil gibt es dort nicht; das ist gewollt. Einen Passwortmanager richtet man im Profil eigens ein ([Erweiterungen und Passwortmanager](05-erweiterungen.md)).
 
 ## Aufbau
 Oben in der Leiste:
@@ -19,6 +19,8 @@ Oben in der Leiste:
 - **Beenden**: beendet alle Sitzungen und den Client
 
 Darunter die Sites, gruppiert nach Kunde. Jede Site zeigt ihren Namen, den Status bzw. den bevorzugten Tunnel-Agenten, die Knöpfe **Bearbeiten** und **Verbinden** und ihre Ziele.
+
+Neben dem Namen steht die installierte Version. Gibt es eine neuere, steht oben ein blauer Hinweis mit den Befehlen zum Aktualisieren ([Updates](../05-betrieb/01-updates.md)).
 
 Steht oben ein roter Hinweis, konnte der Client TRMM nicht lesen (Key, Rechte, Netz). Die Meldung nennt den Grund; die Einrichtung zeigt Einzelheiten.
 

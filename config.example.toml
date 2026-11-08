@@ -10,6 +10,7 @@
 # direct_hosts = ["bitwarden.eu"]  # direkt erreichbar (Passwortmanager), Port 443 außer mit ":port"
 # extension_store = true # Web Store und Updates für Erweiterungen
 # ignore_cert_errors = false  # true: keine Zertifikatswarnungen (gilt dann auch für direct_hosts)
+# update_url = "https://code.bashclub.org/bashclub/trmm-web-relay/raw/branch/main/pyproject.toml"  # leer: kein Hinweis auf neue Versionen
 # active_server = ""     # Server, den die Steuerseite zeigt (umschalten oben in der Seite)
 
 # Je TRMM-Server ein Abschnitt
