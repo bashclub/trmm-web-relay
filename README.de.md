@@ -2,6 +2,10 @@
 
 [English](README.md)
 
+Gefällt dir TRMM Web-Relay?
+
+<a href="https://ko-fi.com/A0A1J73JR"><img src="docs/handbuch/kofi-button.png" alt="Unterstütze die Entwicklung" height="41"></a>
+
 > Entwicklung: https://code.bashclub.org/bashclub/trmm-web-relay
 >
 > Handbuch (ohne Anmeldung): https://docs.bashclub.org/s/trmm-web-relay
@@ -49,8 +53,15 @@ Ohne Installation aus dem Repo: `PYTHONPATH=src python3 -m trmmwebrelay`.
 - Entscheidungen: `docs/adr/`
 - Sprung-Host im Detail: `docs/sprunghost.md`
 
+## Support
+
+- **Hilfe**: [Handbuch](https://docs.bashclub.org/s/trmm-web-relay), vor allem *Fehlerbehebung und FAQ*.
+- **Fehler, Fragen, Wünsche**: [Issues](https://code.bashclub.org/bashclub/trmm-web-relay/issues). Dafür ist ein Konto bei code.bashclub.org nötig, die Anmeldung geht auch mit GitHub.
+- **Kommerzieller Support**, Einrichtung und Wartung: [Spille IT Solutions](https://spille-it.de), [kontakt@spille-it.de](mailto:kontakt@spille-it.de).
+- **Entwicklung unterstützen**: [ko-fi.com/thorakel](https://ko-fi.com/A0A1J73JR).
+
 ## Lizenz und Mitarbeit
 
-GPL-3.0-or-later. Fehler, Fragen und Wünsche als Issue im [Repository](https://code.bashclub.org/bashclub/trmm-web-relay/issues), Beiträge siehe `CONTRIBUTING.md`.
+GPL-3.0-or-later. Beiträge als Pull Request, siehe `CONTRIBUTING.md`.
 
 Maintainer: Thorsten Spille, [Spille IT Solutions](https://spille-it.de), bashclub.

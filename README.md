@@ -2,6 +2,10 @@
 
 [Deutsch](README.de.md)
 
+Like TRMM Web-Relay?
+
+<a href="https://ko-fi.com/A0A1J73JR"><img src="docs/handbuch/kofi-button-en.png" alt="Support the development" height="41"></a>
+
 > Development takes place at https://code.bashclub.org/bashclub/trmm-web-relay
 >
 > Handbook (German, no login required): https://docs.bashclub.org/s/trmm-web-relay
@@ -41,8 +45,15 @@ trmm-web-relay targets    # show targets and tunnel agents from TRMM
 trmm-web-relay desktop    # create the launcher (--remove: remove it)
 ```
 
+## Support
+
+- **Help**: [handbook](https://docs.bashclub.org/s/trmm-web-relay) (German), especially *Fehlerbehebung und FAQ* (troubleshooting).
+- **Bugs, questions, wishes**: [issues](https://code.bashclub.org/bashclub/trmm-web-relay/issues). An account on code.bashclub.org is needed, you can sign in with GitHub.
+- **Commercial support**, setup and maintenance: [Spille IT Solutions](https://spille-it.de), [kontakt@spille-it.de](mailto:kontakt@spille-it.de).
+- **Support the development**: [ko-fi.com/thorakel](https://ko-fi.com/A0A1J73JR).
+
 ## License and contributing
 
-GPL-3.0-or-later. Bugs, questions and wishes as issues on https://code.bashclub.org/bashclub/trmm-web-relay, contributions see `CONTRIBUTING.md`.
+GPL-3.0-or-later. Contributions as pull requests, see `CONTRIBUTING.md`.
 
 Maintainer: Thorsten Spille, [Spille IT Solutions](https://spille-it.de), bashclub.
