@@ -38,7 +38,7 @@ Ohne lokale Kopie direkt aus dem Repository, z. B. für eine Verteilung per Soft
 curl -fsSL https://code.bashclub.org/bashclub/trmm-web-relay/raw/branch/main/install/client.sh -o /tmp/wr-client.sh
 WR_SOURCE=git+https://code.bashclub.org/bashclub/trmm-web-relay.git sh /tmp/wr-client.sh
 ```
-`WR_SOURCE` nimmt alles, was `uv tool install` versteht, auch einen Tag (`git+https://…@v0.4.0`) oder einen eigenen Fork.
+`WR_SOURCE` nimmt alles, was `uv tool install` versteht, auch einen Tag (`git+https://…@v0.5.0`) oder einen eigenen Fork.
 
 ## Ohne Installation
 Zum Ausprobieren oder Entwickeln direkt aus dem Repository (Python ab 3.11):

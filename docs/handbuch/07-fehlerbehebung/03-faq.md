@@ -22,6 +22,12 @@ Der Tunnel endet spätestens nach der Höchstdauer (4 h): TRMM beendet das Skrip
 **Zwei Kunden haben dasselbe Netz. Geht das gleichzeitig?**
 Ja. Eine Adresse geht an die neuere Sitzung. Um sicher beim richtigen Kunden zu landen, die alte Sitzung beenden.
 
+**Wie beende ich den Client, wenn das Fenster zu ist?**
+Über das Symbol im Infobereich → **Beenden**, unter Linux auch per Rechtsklick auf das Startsymbol → **Beenden**, oder mit `trmm-web-relay stop`. Ein Doppelklick auf das Startsymbol öffnet die Steuerseite wieder, dort steht **Beenden** oben rechts. Siehe [Die Steuerseite](../04-bedienung/01-steuerseite.md#beenden).
+
+**Unter GNOME fehlt das Symbol im Infobereich.**
+GNOME zeigt solche Symbole nur mit der Erweiterung „AppIndicator and KStatusNotifierItem Support“. Installieren und einschalten ([Voraussetzungen](../03-installation/01-voraussetzungen.md#rechner-des-technikers)); das Symbol erscheint dann ohne Neustart des Clients. Im Log steht in dem Fall `Kein Infobereich gefunden`.
+
 **Brauche ich für jeden Kunden einen Sprung-Host?**
 Nein, einen je TRMM-Server. Alle Sites teilen ihn; jede hat ihren eigenen Port.
 

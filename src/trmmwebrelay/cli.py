@@ -13,7 +13,7 @@ import sys
 import threading
 import urllib.request
 
-from trmmwebrelay import browser, desktop, setup, version
+from trmmwebrelay import browser, desktop, setup, tray, version
 from trmmwebrelay.config import CONFIG_PATH, STATE_DIR, Config, load
 from trmmwebrelay.inventory import Agent, choose_agent
 from trmmwebrelay.servers import Registry
@@ -67,13 +67,23 @@ def cmd_serve(cfg: Config, args) -> None:
             log.error("%s", e)
 
     signal.signal(signal.SIGTERM, lambda *_: app.quit.set())
-    try:
-        while not app.quit.wait(1):
-            pass
-    except KeyboardInterrupt:
-        pass
+    tray.run(app)  # blockiert bis „Beenden“ (Steuerseite, Infobereich, stop, SIGTERM)
     log.info("Beende offene Sitzungen …")
     manager.stop_all("Client beendet")
+
+
+def cmd_stop(cfg: Config, args) -> None:
+    if not _running(cfg):
+        print("Client läuft nicht")
+        return
+    req = urllib.request.Request(
+        f"http://127.0.0.1:{cfg.control_port}/api/quit", data=b"{}", method="POST",
+        headers={"Host": f"127.0.0.1:{cfg.control_port}", "X-Web-Relay": "1",
+                 "Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(req, timeout=5):
+        pass
+    print("Client wird beendet (offene Sitzungen werden geschlossen)")
 
 
 def cmd_targets(cfg: Config, args) -> None:
@@ -144,6 +154,7 @@ def main() -> None:
     p = sub.add_parser("targets", help="Ziele und Tunnel-Agenten aus TRMM anzeigen")
     p.add_argument("--all", action="store_true", help="auch Sites ohne Ziele")
     sub.add_parser("check", help="Einrichtung prüfen (nur lesend)")
+    sub.add_parser("stop", help="laufenden Client beenden (wie „Beenden“ auf der Steuerseite)")
     p = sub.add_parser("desktop", help="Startsymbol auf Desktop und im Startmenü anlegen")
     p.add_argument("--remove", action="store_true", help="Startsymbol entfernen")
     args = parser.parse_args()
@@ -164,7 +175,7 @@ def main() -> None:
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s", handlers=handlers)
     try:
         cfg = load()
-        {"serve": cmd_serve, "targets": cmd_targets, "check": cmd_check,
+        {"serve": cmd_serve, "targets": cmd_targets, "check": cmd_check, "stop": cmd_stop,
          "desktop": cmd_desktop}[args.cmd](cfg, args)
     except (RuntimeError, TrmmError, ValueError, OSError) as e:
         log.error("%s", e)

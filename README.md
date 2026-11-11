@@ -40,6 +40,7 @@ The user interface and the handbook are in German for now.
 
 ```
 trmm-web-relay            # start the client (like the double-click)
+trmm-web-relay stop       # stop the running client (like "Beenden" in the tray icon)
 trmm-web-relay check      # check the setup of all servers (read-only)
 trmm-web-relay targets    # show targets and tunnel agents from TRMM
 trmm-web-relay desktop    # create the launcher (--remove: remove it)

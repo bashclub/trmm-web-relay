@@ -82,6 +82,7 @@ def _install_linux(exe: str, args: list[str], env: dict) -> list[Path]:
     cmd = " ".join(quote(a) for a in [exe, *args])
     if env:
         cmd = "env " + " ".join(f"{k}={quote(v)}" for k, v in env.items()) + " " + cmd
+    # Rechtsklick auf das Symbol bzw. im Startmenü: „Beenden“
     entry = "\n".join([
         "[Desktop Entry]",
         "Type=Application",
@@ -92,6 +93,11 @@ def _install_linux(exe: str, args: list[str], env: dict) -> list[Path]:
         "Terminal=false",
         "Categories=Network;RemoteAccess;",
         "StartupNotify=false",
+        "Actions=stop;",
+        "",
+        "[Desktop Action stop]",
+        "Name=Beenden",
+        f"Exec={cmd} stop",
         "",
     ])
     written = []

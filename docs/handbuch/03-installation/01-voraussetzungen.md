@@ -30,5 +30,6 @@ Ein Sprung-Host gehört zu genau einem TRMM-Server. Er kann auf einem Host laufe
 - Brave, Chromium, Google Chrome oder Microsoft Edge
 - `git` für die Installation aus dem Repository, oder das Repository als Archiv
 - Netzweg zum Sprung-Host und zur TRMM-API
+- für das Symbol im Infobereich (optional): unter GNOME die Erweiterung „AppIndicator and KStatusNotifierItem Support“. Ubuntu hat sie vorinstalliert; Fedora, Debian und andere installieren sie als Paket (`gnome-shell-extension-appindicator`) oder von extensions.gnome.org und schalten sie in **Erweiterungen** ein. KDE Plasma, Cinnamon, XFCE, MATE, Budgie, LXQt, Windows und macOS brauchen nichts. Fenstermanager wie Sway oder Hyprland brauchen eine Leiste mit Infobereich (z. B. Waybar). Ohne Infobereich läuft der Client trotzdem ([Die Steuerseite](../04-bedienung/01-steuerseite.md#beenden)).
 
 Python muss nicht installiert sein; der Installer holt es über `uv`.

@@ -40,6 +40,7 @@ Ausführlich: [Schnellstart im Handbuch](https://docs.bashclub.org/s/trmm-web-re
 
 ```
 trmm-web-relay            # Client starten (wie Doppelklick)
+trmm-web-relay stop       # laufenden Client beenden (wie „Beenden“ im Infobereich)
 trmm-web-relay check      # Einrichtung aller Server prüfen (nur lesend)
 trmm-web-relay targets    # Ziele und Tunnel-Agenten aus TRMM anzeigen
 trmm-web-relay desktop    # Startsymbol anlegen (--remove: entfernen)

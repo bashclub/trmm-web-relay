@@ -1,12 +1,18 @@
 [project]
 name = "trmm-web-relay"
-version = "0.4.0"
+version = "0.5.0"
 description = "Weboberflächen in Kundennetzen bei Bedarf öffnen, über Tactical RMM und einen Sprung-Host"
 requires-python = ">=3.11"
 license = "GPL-3.0-or-later"
 authors = [{ name = "Thorsten Spille", email = "thorsten@spille-edv.de" }]
 readme = "README.md"
-dependencies = ["keyring>=24"]
+dependencies = [
+    "keyring>=24",
+    # Symbol im Infobereich: Linux über D-Bus (jeepney), Windows und macOS über pystray
+    "jeepney>=0.8; sys_platform == 'linux'",
+    "pystray>=0.19; sys_platform == 'win32' or sys_platform == 'darwin'",
+    "Pillow>=10; sys_platform == 'win32' or sys_platform == 'darwin'",
+]
 
 [project.urls]
 Homepage = "https://code.bashclub.org/bashclub/trmm-web-relay"

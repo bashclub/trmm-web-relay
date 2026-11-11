@@ -8,7 +8,7 @@ outline_id: 76664b9d-1ac1-411b-b7f4-2e5af30e3318
 ### Neue Version erkennen
 Ab 0.4 fragt der Client beim Start und danach einmal am Tag die neueste Version im Repository ab (`update_url`, [Konfiguration](../06-referenz/02-konfiguration.md)). Ist sie neuer als die installierte, steht auf der Steuerseite ein Hinweis mit den Befehlen zum Aktualisieren, und `trmm-web-relay check` meldet:
 ```
-info  Version 0.4.0: neue Version 0.5.0 verfügbar (Handbuch: Updates)
+info  Version 0.5.0: neue Version 0.6.0 verfügbar (Handbuch: Updates)
 ```
 Die installierte Version steht oben auf der Steuerseite neben dem Namen und in `trmm-web-relay --version`. Vor jedem Update den Abschnitt **Hinweise je Version** unten lesen.
 
@@ -65,6 +65,11 @@ Bei [eigenem Deployment](../03-installation/07-eigenes-deployment.md) das Image 
 
 ## Hinweise je Version
 Was eine Version über das Aktualisieren des Clients hinaus verlangt. Sprung-Host und Skripte in TRMM sind nur betroffen, wenn es hier steht.
+
+### 0.5
+- Neu: Symbol im Infobereich mit Menü zum Öffnen und Beenden, Befehl `trmm-web-relay stop` ([Die Steuerseite](../04-bedienung/01-steuerseite.md#symbol-im-infobereich)). Unter GNOME braucht das Symbol die Erweiterung AppIndicator ([Voraussetzungen](../03-installation/01-voraussetzungen.md#rechner-des-technikers)).
+- Den Eintrag **Beenden** im Kontextmenü des Startsymbols (Linux) gibt es erst nach `trmm-web-relay desktop`; `install/client.sh` ruft das auf.
+- Sprung-Host und Skripte in TRMM: nichts zu tun.
 
 ### 0.4
 - Neu: Hinweis auf neue Versionen (siehe oben) und in der Einrichtung der Abschnitt **Browserprofil** für `direct_hosts` und die Zertifikatsprüfung.

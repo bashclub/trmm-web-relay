@@ -24,7 +24,21 @@ Neben dem Namen steht die installierte Version. Gibt es eine neuere, steht oben 
 
 Steht oben ein roter Hinweis, konnte der Client TRMM nicht lesen (Key, Rechte, Netz). Die Meldung nennt den Grund; die Einrichtung zeigt Einzelheiten.
 
-## Beenden
-**Beenden** oben rechts fragt nach, beendet alle Tunnel (inklusive Stopp-Skript auf den Agenten) und schließt den Client. Das Browserfenster kann danach zu. Wer nur das Fenster schließt, beendet den Client nicht; offene Sitzungen laufen weiter, bis Leerlauf oder Höchstdauer sie beenden. Ein neuer Doppelklick öffnet die Seite wieder.
+## Symbol im Infobereich
+Ab 0.5 zeigt der Client ein Symbol im Infobereich (Tray, neben Uhr bzw. Netzwerk), solange er läuft, auch wenn das Fenster zu ist. Ein Klick darauf öffnet das Menü:
+- **Steuerseite öffnen**
+- **Einrichtung**
+- die Zahl der offenen Sitzungen (nur Anzeige, auch als Tooltip)
+- **Alle Sitzungen beenden**: beendet die Tunnel, der Client läuft weiter
+- **Beenden**: beendet alle Sitzungen und den Client. Sind Sitzungen offen, steht ihre Zahl im Eintrag, z. B. „Beenden (2 Sitzungen schließen)“; eine weitere Nachfrage gibt es nicht.
 
-Unter Linux und macOS beendet auch `Strg+C` im Terminal bzw. ein `SIGTERM` den Client sauber.
+Unter **GNOME** (z. B. Fedora, Debian) erscheint das Symbol nur mit der Erweiterung „AppIndicator and KStatusNotifierItem Support“; Ubuntu bringt sie mit. KDE Plasma, Cinnamon, XFCE, MATE, Budgie, LXQt, Windows und macOS zeigen es ohne Zusatz. Fehlt der Infobereich, läuft der Client ohne Symbol, beenden lässt er sich dann auf den anderen Wegen unten. Siehe [Voraussetzungen](../03-installation/01-voraussetzungen.md#rechner-des-technikers).
+
+## Beenden
+Den Client beenden, wahlweise:
+- **Beenden** im Menü des Symbols im Infobereich
+- **Beenden** oben rechts auf der Steuerseite (fragt nach)
+- Linux: Rechtsklick auf **TRMM Web-Relay** im Startmenü bzw. Dock → **Beenden**
+- Kommandozeile: `trmm-web-relay stop`; im Terminal, in dem der Client läuft, auch `Strg+C`
+
+Jeder Weg beendet alle Tunnel (inklusive Stopp-Skript auf den Agenten) und schließt den Client. Das Browserfenster kann danach zu. Wer nur das Fenster schließt, beendet den Client nicht; offene Sitzungen laufen weiter, bis Leerlauf oder Höchstdauer sie beenden. Ein neuer Doppelklick öffnet die Seite wieder.

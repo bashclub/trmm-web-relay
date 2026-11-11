@@ -16,7 +16,7 @@ Repository: https://code.bashclub.org/bashclub/trmm-web-relay. Lizenz GPL-3.0-or
 
 ## Aufbau
 
-- `src/trmmwebrelay/`: Client (Python ab 3.11, nur Standardbibliothek plus optional `keyring`), Steuerseite und Einrichtung als statische Seiten in `static/`.
+- `src/trmmwebrelay/`: Client (Python ab 3.11, Standardbibliothek plus `keyring`; für das Symbol im Infobereich jeepney unter Linux, pystray/Pillow unter Windows und macOS, ADR 0004), Steuerseite und Einrichtung als statische Seiten in `static/`.
 - `trmm-scripts/`: Skripte „Web-Relay: Tunnel starten/stoppen“ für Agenten (Linux, macOS); die Einrichtung legt sie in TRMM an.
 - `jumphost/`: Image (nur sshd) und `install.sh` des Sprung-Hosts; der Client packt beides in einen Installer.
 - `install/`: Installer des Clients (`uv tool install`).
