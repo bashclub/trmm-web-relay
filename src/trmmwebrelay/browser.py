@@ -23,6 +23,7 @@ PROFILE_DIR = STATE_DIR / "browser"
 # Erweiterungen sind signiert, darum hier auch Port 80.
 STORE_HOSTS = (
     "chromewebstore.google.com",
+    "consent.google.com",  # Cookie-Abfrage vor dem Web Store
     "chrome.google.com",
     "clients2.google.com",
     "clients2.googleusercontent.com",

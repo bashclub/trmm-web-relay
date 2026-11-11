@@ -69,6 +69,7 @@ Was eine Version über das Aktualisieren des Clients hinaus verlangt. Sprung-Hos
 ### 0.5
 - Neu: Symbol im Infobereich mit Menü zum Öffnen und Beenden, Befehl `trmm-web-relay stop` ([Die Steuerseite](../04-bedienung/01-steuerseite.md#symbol-im-infobereich)). Unter GNOME braucht das Symbol die Erweiterung AppIndicator ([Voraussetzungen](../03-installation/01-voraussetzungen.md#rechner-des-technikers)).
 - Den Eintrag **Beenden** im Kontextmenü des Startsymbols (Linux) gibt es erst nach `trmm-web-relay desktop`; `install/client.sh` ruft das auf.
+- Web Store: die Cookie-Abfrage (`consent.google.com`) ist jetzt freigegeben; ein eigener Eintrag in `direct_hosts` dafür kann weg.
 - Sprung-Host und Skripte in TRMM: nichts zu tun.
 
 ### 0.4
