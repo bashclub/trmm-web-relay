@@ -35,6 +35,7 @@ STORE_HOSTS = (
     "fonts.gstatic.com",
     "fonts.googleapis.com",
     "extensionupdater.brave.com",
+    "go-updater.brave.com",  # Brave lädt Erweiterungen darüber
     "crxdownload.brave.com",
     "microsoftedge.microsoft.com",
     "edge.microsoft.com",

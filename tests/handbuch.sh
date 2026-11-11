@@ -47,7 +47,7 @@ check "aufbereitbar: _collection.md" eval '"$docs/render.py" render "$docs/_coll
 check "kein Text hinter \`\`\`" eval '! grep -rnE "^\`\`\` +[^ ]" "$docs"'
 
 # nichts Internes: nur Beispieldomains
-check "nur Beispieldomains" eval '! grep -rnoE "[a-z0-9-]+\.(de|com|net|org|io)\b" "$docs" --include=*.md | grep -vE "example\.(com|org)|bashclub\.org|spille-it\.de|youtube\.com|github\.com|ko-fi\.com|developercertificate\.org|astral\.sh|docs\.astral|nas\.local|bitwarden\.(com|net)|google\.com|gnome\.org"'
+check "nur Beispieldomains" eval '! grep -rnoE "[a-z0-9-]+\.(de|com|net|org|io)\b" "$docs" --include=*.md | grep -vE "example\.(com|org)|bashclub\.org|spille-it\.de|youtube\.com|github\.com|ko-fi\.com|developercertificate\.org|astral\.sh|docs\.astral|nas\.local|bitwarden\.(com|net)|google\.com|brave\.com|gnome\.org"'
 
 echo "$((count - failed))/$count bestanden"
 [ $failed -eq 0 ]
