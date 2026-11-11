@@ -68,6 +68,14 @@ Aufbereiten:
 docs/handbuch/render.py list
 docs/handbuch/render.py render docs/handbuch/02-konzept/02-ablauf.md
 ```
+Veröffentlicht wird per CI (`.forgejo/workflows/handbuch.yml`, `ci.sh`): Jeder Push auf `main`, der das Handbuch
+ändert, aktualisiert die Seiten, deren aufbereiteter Text sich geändert hat (`render.py publish --since <vorher>`), auch
+die Beschreibung der Collection aus `_collection.md`. Ein Pull Request zeigt nur, welche Seiten sich ändern würden. Von
+Hand gestartet („Run workflow“) gehen alle Seiten raus. Lokal prüfen, was ginge:
+```bash
+docs/handbuch/render.py publish --since origin/main --dry-run
+```
+Die CI legt keine Seiten an und verschiebt keine. Neue Artikel deshalb zuerst von Hand anlegen und einordnen (unten).
 Ein neuer Artikel wird zuerst angelegt und seine Adresse in `outline:` eingetragen, danach werden Links auf ihn
 aufgelöst. `_collection.md` geht ohne den Hinweis am Ende in die Beschreibung der Collection. Ein neuer, verschobener
 oder umbenannter Artikel ändert den Link „Weiter“ seines Vorgängers: den Vorgänger mit veröffentlichen.
