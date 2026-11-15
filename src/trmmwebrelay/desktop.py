@@ -11,6 +11,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from trmmwebrelay import terminal
 from trmmwebrelay.platform import MACOS, PACKAGE_DIR, WINDOWS, quiet
 
 APP_NAME = "TRMM Web-Relay"
@@ -24,15 +25,8 @@ def _command() -> tuple[str, list[str], dict]:
         w = Path(exe).with_name("pythonw.exe")
         if w.exists():
             exe = str(w)
-    env = {}
     # Aus dem Repo gestartet (nicht installiert): Paketpfad mitgeben
-    clean = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
-    r = subprocess.run(
-        [sys.executable, "-c", "import trmmwebrelay; print(trmmwebrelay.__file__)"],
-        capture_output=True, text=True, check=False, env=clean, cwd=Path.home(), **quiet(),
-    )
-    if r.returncode != 0 or Path(r.stdout.strip()).parent.resolve() != PACKAGE_DIR.resolve():
-        env["PYTHONPATH"] = str(PACKAGE_DIR.parent)
+    env = terminal._client_env()
     return exe, ["-m", "trmmwebrelay"], env
 
 

@@ -15,7 +15,7 @@ Open web interfaces in customer networks on demand, without permanent VPN tunnel
 - **Nothing stays open**: the tunnel exists only during the session and ends after idle time (30 min), after 4 h at most, or on "Beenden" (stop).
 - **No VPN server and no port forwarding at the customer**: the TRMM agent connects outbound to a jump host run by the MSP.
 - **Short-lived certificates**: the client signs throwaway keys for 15 minutes per session; the jump host checks site, port and source IP.
-- **Browser only**: a dedicated browser profile talks to a local SOCKS router that only lets targets of active sessions through. Overlapping address ranges at different customers are no problem.
+- **Browser and SSH only**: a dedicated browser profile (and `ssh` started by the client) talks to a local SOCKS router that only lets targets of active sessions through. Overlapping address ranges at different customers are no problem.
 - **Targets live in TRMM**: web sites and preferred tunnel agents are two custom fields on the site, edited on the control page. No second inventory.
 - **Several TRMM servers** per client, one at a time.
 
@@ -40,6 +40,7 @@ The user interface and the handbook are in German for now.
 
 ```
 trmm-web-relay            # start the client (like the double-click)
+trmm-web-relay ssh admin@192.168.1.3  # SSH to a device through an open session
 trmm-web-relay stop       # stop the running client (like "Beenden" in the tray icon)
 trmm-web-relay check      # check the setup of all servers (read-only)
 trmm-web-relay targets    # show targets and tunnel agents from TRMM

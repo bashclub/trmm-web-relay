@@ -2,8 +2,9 @@
 """Ziele aus dem TRMM-Feld „Tunnel-Ziele“ lesen.
 
 Format: Einträge getrennt mit `;` oder Zeilenumbruch, je Eintrag
-`[Name |] Adresse`. Adresse ist eine URL (`https://192.168.1.1:8443/`)
-oder nur `host[:port]`; dann erkennt der Client das Protokoll selbst.
+`[Name |] Adresse`. Adresse ist eine URL (`https://192.168.1.1:8443/`,
+`ssh://admin@192.168.1.10`) oder nur `host[:port]`; dann erkennt der Client
+das Protokoll selbst (http, https, auf einem angegebenen Port auch SSH).
 """
 
 import ipaddress
@@ -21,15 +22,20 @@ class Target:
     host: str
     port: int | None  # None: Standardport des Protokolls bzw. 443/80 probieren
     path: str
+    user: str = ""  # nur ssh://user@host
 
     def url(self, scheme: str | None = None, port: int | None = None) -> str:
-        return make_url(scheme or self.scheme or "https", self.host, port or self.port, self.path)
+        return make_url(scheme or self.scheme or "https", self.host, port or self.port, self.path, self.user)
 
 
-def make_url(scheme: str, host: str, port: int | None, path: str = "/") -> str:
+DEFAULT_PORTS = {"http": 80, "https": 443, "ssh": 22}
+
+
+def make_url(scheme: str, host: str, port: int | None, path: str = "/", user: str = "") -> str:
     h = f"[{host}]" if ":" in host else host
-    default = {"http": 80, "https": 443}.get(scheme)
-    netloc = h if port in (None, default) else f"{h}:{port}"
+    netloc = h if port in (None, DEFAULT_PORTS.get(scheme)) else f"{h}:{port}"
+    if scheme == "ssh":
+        return f"ssh://{user + '@' if user else ''}{netloc}"
     return f"{scheme}://{netloc}{path or '/'}"
 
 
@@ -55,7 +61,7 @@ def _parse_addr(raw: str, name: str, addr: str) -> Target:
     if "://" in addr:
         parts = urlsplit(addr)
         scheme = parts.scheme.lower()
-        if scheme not in ("http", "https"):
+        if scheme not in ("http", "https", "ssh"):
             raise ValueError(f"Protokoll {scheme} wird nicht unterstützt")
     else:
         parts = urlsplit("//" + addr)
@@ -66,10 +72,19 @@ def _parse_addr(raw: str, name: str, addr: str) -> Target:
         port = parts.port
     except ValueError:
         raise ValueError("ungültiger Port") from None
+    user = parts.username or ""
+    if user and scheme != "ssh":
+        raise ValueError("Benutzer nur bei ssh://")
+    if user and not re.fullmatch(r"[A-Za-z0-9._][A-Za-z0-9._@-]*", user):
+        raise ValueError("ungültiger Benutzername")
+    if parts.password is not None:
+        raise ValueError("kein Passwort in der Adresse")
     path = parts.path or "/"
     if parts.query:
         path += "?" + parts.query
-    return Target(raw=raw, addr=addr, name=name, scheme=scheme, host=host, port=port, path=path)
+    if scheme == "ssh" and path != "/":
+        raise ValueError("ssh:// ohne Pfad")
+    return Target(raw=raw, addr=addr, name=name, scheme=scheme, host=host, port=port, path=path, user=user)
 
 
 def parse_agent_list(value: str) -> list[str]:

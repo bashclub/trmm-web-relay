@@ -86,11 +86,14 @@ function el(tag, attrs, ...children) {
 
 function mins(s) { return s >= 3600 ? Math.floor(s / 3600) + " h " + Math.floor(s % 3600 / 60) + " min" : Math.ceil(s / 60) + " min"; }
 
-function targetEl(t, ready) {
+function targetEl(t, ready, sid) {
   const sub = t.error ? t.error : (t.title && t.title !== t.name ? t.title + " · " : "") + t.url;
   const cls = "target" + (t.error ? " err" : "");
   const inner = [el("span", {}, t.name), el("small", {}, sub)];
   if (!ready) return el("span", { class: cls }, inner);
+  if (t.url.startsWith("ssh://")) {
+    return el("button", { class: cls, title: "Im Terminal öffnen", onclick: () => post("/api/terminal", { session_id: sid, url: t.url }) }, inner);
+  }
   if (inProfile) return el("a", { class: cls, href: t.url, target: "_blank", rel: "noopener" }, inner);
   return el("button", { class: cls, onclick: () => post("/api/open", { url: t.url }) }, inner);
 }
@@ -119,7 +122,7 @@ function siteEl(s) {
     el("div", { class: "row" }, el("span", { class: "name" }, s.name), el("span", { class: "meta" }, status), editBtn, btn),
     notes, nets,
     s.target_errors.length ? el("div", { class: "meta state-fehler" }, "Nicht lesbar: " + s.target_errors.join("; ")) : null,
-    targets.length ? el("div", { class: "targets" }, targets.map(t => targetEl(t, ready))) : null,
+    targets.length ? el("div", { class: "targets" }, targets.map(t => targetEl(t, ready, sess && sess.id))) : null,
     editing && editing.site.id === s.id ? editorEl() : null);
 }
 
@@ -153,7 +156,7 @@ function editorEl() {
   const e = editing;
   const rows = e.targets.map((t, i) => el("div", { class: "line" },
     el("input", { class: "n", placeholder: "Name (optional)", value: t.name, oninput: ev => { t.name = ev.target.value; } }),
-    el("input", { class: "a", placeholder: "192.168.1.1:8443 oder https://nas.local/", value: t.addr, oninput: ev => { t.addr = ev.target.value; } }),
+    el("input", { class: "a", placeholder: "192.168.1.1:8443, https://nas.local/ oder ssh://admin@192.168.1.10", value: t.addr, oninput: ev => { t.addr = ev.target.value; } }),
     el("button", { title: "nach oben", onclick: () => move(e.targets, i, -1) }, "↑"),
     el("button", { title: "nach unten", onclick: () => move(e.targets, i, 1) }, "↓"),
     el("button", { title: "entfernen", onclick: () => { e.targets.splice(i, 1); redrawEditor(); } }, "✕")));

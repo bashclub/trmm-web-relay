@@ -12,20 +12,22 @@ Einträge, getrennt mit `;` oder Zeilenumbruch. Je Eintrag:
 [Name |] Adresse
 ```
 - **Name** (optional): Text des Links, ohne `|` und `;`. Ohne Name nimmt der Client den Seitentitel.
-- **Adresse**: eine URL mit `http://` oder `https://`, oder nur `host[:port][/pfad]`.
+- **Adresse**: eine URL mit `http://`, `https://` oder (ab 0.6) `ssh://[benutzer@]host[:port]`, oder nur `host[:port][/pfad]`.
 
 | Adresse | Der Client probiert |
 |---|---|
 | `192.168.1.1` | `https://192.168.1.1/`, dann `http://192.168.1.1/` |
-| `192.168.1.1:8443` | HTTPS auf 8443, dann HTTP auf 8443 |
+| `192.168.1.1:8443` | HTTPS auf 8443, dann HTTP auf 8443, dann SSH auf 8443 |
 | `https://192.168.1.1:8443/ui/` | nur diese URL |
-| `nas.local:5001` | HTTPS, dann HTTP auf 5001; `nas.local` löst der Agent auf |
+| `nas.local:5001` | HTTPS, dann HTTP auf 5001, dann SSH; `nas.local` löst der Agent auf |
+| `192.168.1.10:22` | nur SSH |
+| `ssh://admin@192.168.1.10` | nur SSH auf Port 22, als Benutzer `admin` |
 
 Beispiel:
 ```
-OPNsense | 192.168.1.1:8443; Proxmox | 192.168.1.2:8006; https://nas.local:5001/; Drucker | 192.168.1.50
+OPNsense | 192.168.1.1:8443; Proxmox | 192.168.1.2:8006; https://nas.local:5001/; Drucker | 192.168.1.50; Switch | ssh://admin@192.168.1.3
 ```
-Andere Protokolle als HTTP und HTTPS lehnt der Client ab. Einträge, die er nicht versteht, zeigt die Steuerseite unter **Nicht lesbar** und `trmm-web-relay targets` mit `!`; die übrigen gehen trotzdem.
+SSH ohne Port oder `ssh://` erkennt der Client nicht, weil er ohne Port nur 443 und 80 probiert. Bei `ssh://` sind ein Benutzer, aber kein Passwort und kein Pfad erlaubt. Andere Protokolle als HTTP, HTTPS und SSH lehnt der Client ab. Einträge, die er nicht versteht, zeigt die Steuerseite unter **Nicht lesbar** und `trmm-web-relay targets` mit `!`; die übrigen gehen trotzdem.
 
 Hostnamen löst der Agent auf, nicht der Rechner des Technikers (SOCKS mit Namensauflösung am Ende des Tunnels). Ein Hostname ist im Tunnel nur erreichbar, wenn er als Ziel eingetragen ist; IP-Adressen auch, wenn sie in einem Netz des Agenten liegen.
 

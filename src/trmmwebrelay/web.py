@@ -9,7 +9,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-from trmmwebrelay import browser, certs, config, hostkeys, installer, inventory, keystore, setup, version
+from trmmwebrelay import browser, certs, config, hostkeys, installer, inventory, keystore, setup, terminal, version
 from trmmwebrelay.config import Config, Server
 from trmmwebrelay.servers import Registry
 from trmmwebrelay.session import Session, SessionManager
@@ -223,6 +223,15 @@ class App:
             for name in (srv.api_key_name, srv.ca_key_name, srv.ca_key_name + ".pub"):
                 keystore.delete(name)
 
+    def open_terminal(self, session_id: str, url: str) -> None:
+        """SSH-Ziel einer bereiten Sitzung im Terminal öffnen."""
+        sess = self.manager.sessions.get(session_id)
+        if sess is None or sess.state != "bereit":
+            raise LookupError("Sitzung nicht bereit")
+        if not any(t.url == url for t in sess.targets) or not url.startswith("ssh://"):
+            raise ValueError("kein SSH-Ziel dieser Sitzung")
+        terminal.launch(self.cfg, terminal.client_command("ssh", "--wait", url))
+
     def backend(self, server_id: str):
         b = self.registry.get(str(server_id))
         if b is None:
@@ -277,6 +286,12 @@ def make_handler(app: App):
                     return self._json(400, {"error": str(e)})
                 except Exception as e:  # noqa: BLE001
                     return self._json(500, {"error": str(e)})
+            if url.path == "/api/route":
+                sess = app.manager.resolve(parse_qs(url.query).get("host", [""])[0].lower())
+                if sess is None:
+                    return self._json(404, {"error": "keine offene Sitzung für diesen Host"})
+                return self._json(200, {"site": sess.site.key, "name": f"{sess.site.client} / {sess.site.name}",
+                                        "session": sess.id})
             if url.path == "/api/setup":
                 return self._json(200, app.setup_state())
             if url.path == "/api/setup/installer":
@@ -336,6 +351,9 @@ def make_handler(app: App):
                 if not url.startswith(("http://", "https://")):
                     raise ValueError("nur http(s)")
                 browser.open_url(app.cfg, url)
+                return {"ok": True}
+            if path == "/api/terminal":
+                app.open_terminal(str(body["session_id"]), str(body["url"]))
                 return {"ok": True}
             if path == "/api/quit":
                 app.quit.set()

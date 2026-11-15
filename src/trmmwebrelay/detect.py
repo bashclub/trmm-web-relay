@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-"""Erkennen, was hinter host:port steckt: http oder https, Seitentitel."""
+"""Erkennen, was hinter host:port steckt: http, https oder SSH, Seitentitel bzw. SSH-Kennung."""
 
 import html
 import json
@@ -11,7 +11,7 @@ from urllib.parse import urljoin, urlsplit
 
 from trmmwebrelay.config import CACHE_DIR
 from trmmwebrelay.socks import SocksError, connect_via
-from trmmwebrelay.targets import Target, is_ip, make_url
+from trmmwebrelay.targets import DEFAULT_PORTS, Target, is_ip, make_url
 
 CACHE_FILE = CACHE_DIR / "erkannt.json"
 _cache_lock = threading.Lock()
@@ -112,18 +112,42 @@ def _fetch_title(proxy_port: int, scheme: str, host: str, port: int, path: str) 
     return ""
 
 
+def _ssh_banner(proxy_port: int, host: str, port: int) -> str:
+    """SSH-Kennung des Servers ("OpenSSH_9.6"); der Server sendet sie ungefragt."""
+    sock = connect_via(proxy_port, host, port, timeout=8)
+    try:
+        sock.settimeout(4)
+        data = b""
+        while b"\n" not in data and len(data) < 1024:
+            chunk = sock.recv(256)
+            if not chunk:
+                break
+            data += chunk
+    finally:
+        sock.close()
+    for line in data.decode("utf-8", errors="replace").splitlines():
+        if line.startswith("SSH-"):
+            return line.split("-", 2)[2].strip()[:60] if line.count("-") >= 2 else "SSH"
+    raise SocksError("keine SSH-Kennung")
+
+
 def detect(proxy_port: int, target: Target) -> Detected:
     if target.scheme:
-        candidates = [(target.scheme, target.port or (443 if target.scheme == "https" else 80))]
+        candidates = [(target.scheme, target.port or DEFAULT_PORTS[target.scheme])]
+    elif target.port == 22:
+        candidates = [("ssh", 22)]
     elif target.port:
-        candidates = [("https", target.port), ("http", target.port)]
+        candidates = [("https", target.port), ("http", target.port), ("ssh", target.port)]
     else:
         candidates = [("https", 443), ("http", 80)]
 
     last_error = ""
     for scheme, port in candidates:
         try:
-            title = _fetch_title(proxy_port, scheme, target.host, port, target.path)
+            if scheme == "ssh":
+                title = "SSH " + _ssh_banner(proxy_port, target.host, port)
+            else:
+                title = _fetch_title(proxy_port, scheme, target.host, port, target.path)
         except SocksError as e:
             if e.code in (3, 4, 5):  # Netz/Host nicht erreichbar, Verbindung abgelehnt
                 last_error = str(e)

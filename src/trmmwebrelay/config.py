@@ -65,6 +65,9 @@ class Config:
     max_hours: int = 4
     # Leer: Brave bzw. Chromium automatisch suchen
     browser: str = ""
+    # Leer: Terminal für SSH-Ziele automatisch wählen; sonst Programm mit
+    # Argumenten, nach denen der Befehl folgt, z. B. "konsole -e"
+    terminal: str = ""
     # Hosts, die das Browserprofil direkt (ohne Tunnel) erreicht, z. B. ein
     # Passwortmanager; "host" gilt mit Subdomains, nur Port 443 außer mit ":port"
     direct_hosts: list[str] = field(default_factory=list)
@@ -160,6 +163,8 @@ def load() -> Config:
         cfg.direct_hosts = normalize_direct_hosts(cfg.direct_hosts)
     except ValueError as e:
         raise ValueError(f"{CONFIG_PATH}: {e}") from None
+    if not isinstance(cfg.terminal, str):
+        raise ValueError(f"terminal in {CONFIG_PATH}: Befehl als Text erwartet")
     if not isinstance(cfg.update_url, str):
         raise ValueError(f"update_url in {CONFIG_PATH}: Adresse als Text erwartet")
     for flag in ("extension_store", "ignore_cert_errors"):

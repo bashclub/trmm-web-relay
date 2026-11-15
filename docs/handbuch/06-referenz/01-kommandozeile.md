@@ -29,8 +29,34 @@ ok    Feld „Tunnel-Ziele“ an Sites
 …
 ok    Anmeldung am Sprung-Host
 ok    Browser: /usr/bin/brave-browser
-ok    Version 0.5.0
+ok    Version 0.6.0
 ```
+
+## `ssh`
+```
+trmm-web-relay ssh [--wait] ZIEL [BEFEHL …]
+```
+Ab 0.6. Öffnet `ssh` zu einem Gerät im Kundennetz über den Tunnel einer offenen Sitzung; der Client muss laufen und die Site verbunden sein. `ZIEL` ist `[benutzer@]host` oder `ssh://[benutzer@]host[:port]`, `BEFEHL` läuft wie bei `ssh` auf dem Gerät. Es ist das normale `ssh` mit eigenen Schlüsseln, `ssh-agent` und `~/.ssh/config`, dazu:
+- als `ProxyCommand` `trmm-web-relay proxy %h %p`,
+- die Host-Schlüssel je Site in `~/.local/share/trmm-web-relay/known_hosts.d/`,
+- `ServerAliveInterval=60`, damit ein offenes Terminal die Sitzung aktiv hält.
+
+Ohne Sitzung zum Host endet der Befehl mit `Keine offene Sitzung erreicht …`. Der Klick auf ein SSH-Ziel der Steuerseite ruft ihn im Terminal auf.
+
+| Option | Bedeutung |
+|---|---|
+| `--wait` | nach einem Fehler auf Enter warten, damit das Terminalfenster die Meldung zeigt |
+
+## `proxy`
+```
+trmm-web-relay proxy HOST PORT
+```
+Ab 0.6. Verbindet Standardein- und -ausgabe mit `HOST:PORT` über den SOCKS-Verteiler, als `ProxyCommand` für eigene Aufrufe von `ssh`, `scp`, `sftp` oder Ansible. Der Host muss in einer offenen Sitzung liegen. Beispiel in `~/.ssh/config`:
+```
+Host 192.168.1.*
+    ProxyCommand trmm-web-relay proxy %h %p
+```
+Gilt dann für alle Sitzungen; die Host-Schlüssel stehen dabei in `~/.ssh/known_hosts`, mit den Warnungen bei gleichen Adressen verschiedener Kunden.
 
 ## `stop`
 Beendet den laufenden Client wie **Beenden** auf der Steuerseite: alle Sitzungen (inklusive Stopp-Skript auf den Agenten), dann den Client. Der Befehl wartet nicht, bis alle Stopp-Skripte gelaufen sind. Läuft kein Client, meldet er `Client läuft nicht` und endet mit Status 0. Unter Linux ruft der Eintrag **Beenden** im Kontextmenü des Startsymbols diesen Befehl auf.

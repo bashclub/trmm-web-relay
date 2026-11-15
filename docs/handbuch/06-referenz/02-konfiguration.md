@@ -25,6 +25,7 @@ jump = "relay.example.com:22222"
 | `idle_minutes` | `30` | Leerlauf bis zum Ende einer Sitzung |
 | `max_hours` | `4` | Höchstdauer einer Sitzung |
 | `browser` | leer | Pfad zum Browser |
+| `terminal` | leer | Terminal für SSH-Ziele |
 | `direct_hosts` | leer | Hosts, die das Profil direkt erreicht |
 | `extension_store` | `true` | Web Store und Updates für Erweiterungen erreichbar |
 | `ignore_cert_errors` | `false` | Zertifikatsfehler im Profil ignorieren |
@@ -55,6 +56,13 @@ Stunden, nach denen eine Sitzung spätestens endet. Gilt auch als Laufzeitgrenze
 
 ### `browser`
 Pfad zu einem Chromium-basierten Browser. Leer: Der Client sucht Brave, Chromium, Google Chrome und (unter Windows) Microsoft Edge, in dieser Reihenfolge. Firefox geht nicht, weil der Client die Chromium-Schalter für Profil und Proxy nutzt.
+
+### `terminal`
+Ab 0.6. Terminal, in dem ein Klick auf ein SSH-Ziel `ssh` öffnet: Programm mit den Argumenten, nach denen der Befehl folgt. Leer: Der Client wählt selbst ([Verbinden und arbeiten](../04-bedienung/02-verbinden.md#ssh)).
+```toml
+terminal = "konsole -e"
+```
+Weitere Beispiele: `"kitty"`, `"alacritty -e"`, `"wezterm start --"`, `"gnome-terminal --"`. Unter macOS z. B. `"open -na iTerm --args"` statt Terminal.app.
 
 ### `direct_hosts`
 Ab 0.3, ab 0.4 auch in der Einrichtung unter **Browserprofil**. Liste von Hosts, die das Browserprofil direkt ins Internet erreicht, ohne Tunnel, z. B. der Server eines Passwortmanagers. Ein Eintrag gilt für den Host und alle Subdomains, nur auf Port 443; ein anderer Port steht dahinter:

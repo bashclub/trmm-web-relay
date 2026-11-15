@@ -8,7 +8,7 @@ outline_id: 925091c7-6277-4549-b568-a28e5bc938db
 Noch nicht. Das Tunnel-Skript gibt es für Linux und macOS. Ein PowerShell-Skript für Windows ist geplant. Bis dahin hilft ein kleiner Linux-Rechner mit TRMM-Agent in der Site.
 
 **Kann ich RDP, SSH oder SMB durch den Tunnel nutzen?**
-Nein, nur Weboberflächen im eigenen Browserprofil. Für Shell und Desktop hat TRMM eigene Wege. Siehe [Vergleich mit VPN](../02-konzept/04-vergleich-mit-vpn.md).
+SSH ja, ab 0.6: SSH-Ziele öffnen ein Terminal, und `trmm-web-relay ssh` bzw. `proxy` gehen auf der Kommandozeile ([Verbinden und arbeiten](../04-bedienung/02-verbinden.md#ssh)). RDP und SMB nicht. Für Desktop und Shell auf Geräten mit Agent hat TRMM eigene Wege. Siehe [Vergleich mit VPN](../02-konzept/04-vergleich-mit-vpn.md).
 
 **Muss beim Kunden ein Port offen sein?**
 Nein. Der Agent baut die Verbindung nach außen zum Sprung-Host auf. Er braucht nur ausgehend TCP zum Port des Sprung-Hosts.

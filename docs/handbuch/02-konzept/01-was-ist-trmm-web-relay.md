@@ -19,7 +19,7 @@ TRMM Web-Relay öffnet Weboberflächen in Kundennetzen, ohne dass dafür ein Tun
 - Es meldet sich bei jedem Schritt mit kurzlebigen Zertifikaten an, die nur für diese Sitzung gelten.
 
 ## Was es nicht tut
-- **Nur TCP, nur im Browser.** RDP, SMB, SSH aus anderen Programmen, UDP oder Ping gehen nicht durch den Tunnel. Für Shell und Desktop hat TRMM eigene Wege.
+- **Nur TCP, nur Browser und SSH.** Ab 0.6 geht neben dem Browser auch `ssh` durch den Tunnel ([Verbinden und arbeiten](../04-bedienung/02-verbinden.md#ssh)). RDP, SMB, UDP oder Ping gehen nicht. Für Desktop und Shell auf Geräten mit Agent hat TRMM eigene Wege.
 - **Agenten unter Linux und macOS.** Windows-Agenten können den Tunnel noch nicht bauen. In einer Site mit nur Windows-Geräten braucht es einen Linux-Rechner, z. B. eine kleine VM, den Hypervisor oder einen Raspberry Pi mit TRMM-Agent.
 - **Kein Ersatz für TRMM-Rechte.** Wer im TRMM des MSP Skripte auf einer Site ausführen darf, kann auch tunneln. Web-Relay schränkt das nicht weiter ein.
 

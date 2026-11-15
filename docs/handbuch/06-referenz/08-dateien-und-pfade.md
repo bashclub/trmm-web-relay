@@ -12,6 +12,7 @@ Die Pfade gelten auf allen Systemen relativ zum Benutzerordner, unter Windows al
 | `~/.config/trmm-web-relay/config.toml` | Einstellungen, ohne Geheimnisse ([Konfiguration](02-konfiguration.md)) |
 | `~/.local/share/trmm-web-relay/client.log` | Protokoll |
 | `~/.local/share/trmm-web-relay/known_hosts` | bestätigte Host-Schlüssel der Sprung-Hosts |
+| `~/.local/share/trmm-web-relay/known_hosts.d/` | Host-Schlüssel der Geräte, die per SSH erreicht wurden, eine Datei je Site (ab 0.6) |
 | `~/.local/share/trmm-web-relay/browser/` | eigenes Browserprofil |
 | `~/.local/share/trmm-web-relay/secrets/` | Geheimnisse, nur ohne nutzbaren Schlüsselbund (Rechte 0600) |
 | `~/.cache/trmm-web-relay/erkannt.json` | erkannte Protokolle und Seitentitel der Ziele |

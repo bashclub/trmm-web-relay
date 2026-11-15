@@ -15,7 +15,7 @@ Weboberflächen in Kundennetzen bei Bedarf öffnen, ohne dauerhafte VPN-Tunnel. 
 - **Nichts dauerhaft offen**: Der Tunnel steht nur während der Sitzung und endet nach Leerlauf (30 min), spätestens nach 4 h oder mit „Beenden“.
 - **Kein VPN-Server und keine Portfreigabe beim Kunden**: Der TRMM-Agent baut den Tunnel nach außen zu einem Sprung-Host auf, den der MSP betreibt.
 - **Kurzlebige Zertifikate**: Der Client signiert je Sitzung Wegwerf-Schlüssel für 15 Minuten; der Sprung-Host prüft Site, Port und Absender-IP.
-- **Nur der Browser**: Ein eigenes Browserprofil geht über einen lokalen SOCKS-Verteiler, der nur die Ziele aktiver Sitzungen durchlässt. Gleiche Adressbereiche bei verschiedenen Kunden stören nicht.
+- **Nur Browser und SSH**: Ein eigenes Browserprofil (und `ssh` über den Client) geht über einen lokalen SOCKS-Verteiler, der nur die Ziele aktiver Sitzungen durchlässt. Gleiche Adressbereiche bei verschiedenen Kunden stören nicht.
 - **Ziele in TRMM**: Websites und bevorzugte Tunnel-Agenten stehen in zwei Benutzerfeldern an der Site, gepflegt in der Steuerseite. Kein zweites Inventar.
 - **Mehrere TRMM-Server** je Client, immer einer zur Zeit.
 
@@ -40,6 +40,7 @@ Ausführlich: [Schnellstart im Handbuch](https://docs.bashclub.org/s/trmm-web-re
 
 ```
 trmm-web-relay            # Client starten (wie Doppelklick)
+trmm-web-relay ssh admin@192.168.1.3  # SSH zu einem Gerät über eine offene Sitzung
 trmm-web-relay stop       # laufenden Client beenden (wie „Beenden“ im Infobereich)
 trmm-web-relay check      # Einrichtung aller Server prüfen (nur lesend)
 trmm-web-relay targets    # Ziele und Tunnel-Agenten aus TRMM anzeigen

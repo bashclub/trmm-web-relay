@@ -13,7 +13,7 @@ import sys
 import threading
 import urllib.request
 
-from trmmwebrelay import browser, desktop, setup, tray, version
+from trmmwebrelay import browser, desktop, setup, sshproxy, tray, version
 from trmmwebrelay.config import CONFIG_PATH, STATE_DIR, Config, load
 from trmmwebrelay.inventory import Agent, choose_agent
 from trmmwebrelay.servers import Registry
@@ -86,6 +86,14 @@ def cmd_stop(cfg: Config, args) -> None:
     print("Client wird beendet (offene Sitzungen werden geschlossen)")
 
 
+def cmd_ssh(cfg: Config, args) -> None:
+    sys.exit(sshproxy.run_ssh(cfg, args.ziel, args.befehl, args.wait))
+
+
+def cmd_proxy(cfg: Config, args) -> None:
+    sys.exit(sshproxy.run_proxy(cfg, args.host, args.port))
+
+
 def cmd_targets(cfg: Config, args) -> None:
     registry = Registry(cfg)
     for b in registry.backends.values():
@@ -154,6 +162,13 @@ def main() -> None:
     p = sub.add_parser("targets", help="Ziele und Tunnel-Agenten aus TRMM anzeigen")
     p.add_argument("--all", action="store_true", help="auch Sites ohne Ziele")
     sub.add_parser("check", help="Einrichtung prüfen (nur lesend)")
+    p = sub.add_parser("ssh", help="SSH zu einem Gerät über den Tunnel einer offenen Sitzung")
+    p.add_argument("ziel", help="[user@]host oder ssh://[user@]host[:port]")
+    p.add_argument("befehl", nargs=argparse.REMAINDER, help="Befehl auf dem Gerät (optional)")
+    p.add_argument("--wait", action="store_true", help="bei einem Fehler auf Enter warten (für Terminalfenster)")
+    p = sub.add_parser("proxy", help="ProxyCommand für ssh: host port über den SOCKS-Verteiler")
+    p.add_argument("host")
+    p.add_argument("port", type=int)
     sub.add_parser("stop", help="laufenden Client beenden (wie „Beenden“ auf der Steuerseite)")
     p = sub.add_parser("desktop", help="Startsymbol auf Desktop und im Startmenü anlegen")
     p.add_argument("--remove", action="store_true", help="Startsymbol entfernen")
@@ -176,6 +191,7 @@ def main() -> None:
     try:
         cfg = load()
         {"serve": cmd_serve, "targets": cmd_targets, "check": cmd_check, "stop": cmd_stop,
+         "ssh": cmd_ssh, "proxy": cmd_proxy,
          "desktop": cmd_desktop}[args.cmd](cfg, args)
     except (RuntimeError, TrmmError, ValueError, OSError) as e:
         log.error("%s", e)

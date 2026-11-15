@@ -12,7 +12,7 @@ Haken bei **auch Sites ohne Ziele**, wenn die Site noch keine Ziele hat. Dann **
 ## Websites
 Je Zeile ein Ziel:
 - **Name (optional)**: so heißt der Link, z. B. `Firewall`. Leer: der Seitentitel des Geräts.
-- **Adresse**: `host:port`, `host` oder eine URL, z. B. `192.168.1.1:8443`, `192.168.1.10`, `https://nas.local:5001/`, `http://192.168.1.20/admin/`.
+- **Adresse**: `host:port`, `host` oder eine URL, z. B. `192.168.1.1:8443`, `192.168.1.10`, `https://nas.local:5001/`, `http://192.168.1.20/admin/`, ab 0.6 auch SSH: `ssh://admin@192.168.1.3` oder `192.168.1.3:22` ([SSH](02-verbinden.md#ssh)).
 
 Ohne Protokoll probiert der Client HTTPS und HTTP und nimmt, was antwortet. Ohne Port probiert er 443 und 80. Die Reihenfolge mit ↑ und ↓ ist die Reihenfolge der Links, ✕ entfernt eine Zeile, **+ Website** fügt eine hinzu. Nicht erlaubt sind `|`, `;` und Leerzeichen in der Adresse und `|` oder `;` im Namen.
 
